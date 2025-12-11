@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="Registration.jpg">
+    <title>Student Registration</title>
+
+    <style>
+        body {
+    background: linear-gradient(135deg, #cfe2ff, #e9f3ff, #ffffff);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+}
+
+/* Wrapper */
+.main-wrapper {
+    width: 900px;
+    margin: 40px auto;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+/* LEFT IMAGE */
+.student-img {
+    width: 380px;
+    height: 430px;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: 0.4s;
+}
+
+.student-img:hover {
+    transform: scale(1.06);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+}
+
+/* FORM CONTAINER - GLASS EFFECT */
+.form-container {
+    width: 450px;
+    padding: 30px;
+    border-radius: 20px;
+
+    /* Glassmorphism */
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    /* Glow border effect */
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.1),
+        0 0 15px rgba(0, 80, 255, 0.2);
+    
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    text-align: center;
+    color: #002b80;
+    letter-spacing: 1px;
+    font-size: 26px;
+    font-weight: 700;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Input boxes */
+label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #003366;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+
+    border: 2px solid #b3c6ff;
+    border-radius: 12px;
+
+    background: #ffffffcc;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #0056ff;
+    box-shadow: 0 0 12px rgba(0, 86, 255, 0.4);
+    outline: none;
+    transform: scale(1.02);
+}
+
+/* BUTTONS */
+.btn {
+    padding: 12px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+/* Submit Button - Green Neon */
+.submit-btn {
+    background: linear-gradient(135deg, #00c853, #00e676);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4);
+}
+
+.submit-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 18px rgba(0, 200, 83, 0.6);
+}
+
+/* Reset Button - Red */
+.reset-btn {
+    background: linear-gradient(135deg, #ff3d00, #ff6e40);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 61, 0, 0.4);
+}
+
+.reset-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 18px rgba(255, 61, 0, 0.6);
+}
+
+/* Back Button - Black Glass */
+.back-btn {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.back-btn:hover {
+    transform: scale(1.1);
+    background: black;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+}
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <!-- LEFT STUDENT IMAGE -->
+        <img src="student.jpg" class="student-img">
+
+        <!-- RIGHT FORM -->
+        <div class="form-container">
+            <h2>Student Registration Form</h2>
+
+            <form id="regForm">
+
+                <label>Name:</label>
+                <input type="text" id="name">
+
+                <label>Registration Number:</label>
+                <input type="text" id="regno" maxlength="10">
+
+                <label>Email ID:</label>
+                <input type="text" id="email">
+
+                <label>Phone Number:</label>
+                <input type="text" id="phone" maxlength="10">
+
+                <div style="margin-top: 15px;">
+                    <button type="button" class="btn submit-btn" onclick="validateForm()">Submit</button>
+                    <button type="reset" class="btn reset-btn">Reset</button>
+                    <button type="button" class="btn back-btn" onclick="goBack()">Back</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
