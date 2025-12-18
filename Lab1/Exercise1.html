@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Table</title>
+</head>
+<style>
+    table
+    {
+        border: 2px solid black;
+        border-collapse: collapse;
+        margin: 50px auto;
+    }
+    body
+    {
+        display: flex;
+        justify-content: center;
+    }
+
+    th, td
+    {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+    th
+    {
+        background-color: rgb(86, 144, 0);
+        color: white;
+    }
+    th:hover
+    {
+        border-radius: 3px;
+        color: rgb(29, 4, 4);
+        background-color: cornsilk;
+    }
+    td:hover
+    {
+        background-color: antiquewhite;
+        color: brown;
+    }
+
+</style>
+<body>
+    <table>
+        <caption>Student Marksheet</caption>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Roll No</th>
+                <th>Maths</th>
+                <th>Physics</th>
+                <th>Chemistry</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Siva Kumar</td>
+                <td>23BCE9372</td>
+                <td>45</td>
+                <td>38</td>
+                <td>29</td>
+                <td>112</td>
+            </tr>
+            <tr>
+                <td>Raghuvaran</td>
+                <td>23BCE9386</td>
+                <td>48</td>
+                <td>42</td>
+                <td>35</td>
+                <td>125</td>
+            </tr>
+            <tr>
+                <td>Narasimha</td>
+                <td>23BCE9409</td>
+                <td>43</td>
+                <td>35</td>
+                <td>23</td>
+                <td>101</td>
+            </tr>
+            <tr>
+                <td>Varun</td>
+                <td>23BCE9454</td>
+                <td>38</td>
+                <td>29</td>
+                <td>42</td>
+                <td>109</td>
+            </tr>
+            <tr>
+                <td>Pavan Sai</td>
+                <td>23BCE9626</td>
+                <td>49</td>
+                <td>44</td>
+                <td>36</td>
+                <td>129</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">Total </td>
+                <td>223</td>
+                <td>188</td>
+                <td>165</td>
+                <td>576</td>
+            </tr>
+            <tr>
+                <td colspan="2">Average</td>
+                <td>44.6</td>
+                <td>37.6</td>
+                <td>33</td>
+                <td>115.2</td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

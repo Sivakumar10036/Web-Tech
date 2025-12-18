@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Form</title>
+  </head>
+  <style>
+      body
+      {
+        font-family: Arial, sans-serif;
+        background-color: #eef3f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      form
+      {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      fieldset
+      {
+        border: 2px solid #1e88e5;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 6px 12px rgba(30, 136, 229, 0.2);
+      }
+
+      legend
+      {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #1e88e5;
+        padding: 0 10px;
+        text-align: center;
+      }
+
+      label
+      {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      input,
+      textarea
+      {
+        width: 100%;
+        padding: 10px 3px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #90caf9;
+        font-size: 1em;
+        transition: all 0.3s ease;
+      }
+
+      input:focus,
+      textarea:focus
+      {
+        border-color: #1e88e5;
+        outline: none;
+        box-shadow: 0 0 6px rgba(30, 136, 229, 0.5);
+      }
+
+      input:hover,
+      textarea:hover
+      {
+        background-color: #e3f2fd;
+      }
+
+      button
+      {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1e88e5;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover
+      {
+        background-color: #1565c0;
+      }
+
+  </style>
+  <body>
+    <form action="">
+      <fieldset>
+        <legend>Contact Form</legend>
+
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required />
+        <br /><br />
+
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter your email id"
+          required
+        />
+        <br /><br />
+
+        <label for="complaint">Complaint</label>
+        <textarea
+          id="complaint"
+          rows="4"
+          cols="40"
+          placeholder="Explain your complaint"
+          required
+        ></textarea>
+        <label for="submit">
+          <button>Submit</button>
+        </label>
+      </fieldset>
+    </form>
+  </body>
+</html>
