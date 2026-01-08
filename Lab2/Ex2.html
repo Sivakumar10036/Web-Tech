@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #0a0a0f 0%, #050510 30%, #000014 70%);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background */
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(20, 150, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 150, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00ffff, #0080ff, #a020f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #8a9bb8;
+            letter-spacing: 1px;
+            margin-top: 15px;
+        }
+
+        /* Main Content Layout */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 1100px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Upload Panel */
+        .upload-panel {
+            background: rgba(10, 15, 30, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .upload-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #00ffff, #0080ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .upload-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .upload-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .upload-box {
+            border: 2px dashed rgba(0, 150, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(5, 10, 25, 0.5);
+        }
+
+        .upload-box:hover {
+            border-color: #00ffff;
+            background: rgba(0, 150, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #00ffff;
+            margin-bottom: 15px;
+        }
+
+        .upload-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtitle {
+            color: #8a9bb8;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #0080ff, #00ccff);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
+        }
+
+        .audio-upload-btn {
+            background: linear-gradient(135deg, #ff0080, #ff00cc);
+        }
+
+        .audio-upload-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 200, 0.5);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 20, 40, 0.5);
+            border-radius: 10px;
+            border-left: 3px solid #00ffff;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-info h4 {
+            color: #00ffff;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .file-details {
+            display: flex;
+            justify-content: space-between;
+            color: #8a9bb8;
+            font-size: 0.9rem;
+        }
+
+        /* Player Cards */
+        .player-card {
+            background: rgba(10, 15, 30, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 150, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.4);
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.3);
+        }
+
+        .player-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0080ff, #00ccff);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.8rem;
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+        }
+
+        .video-icon {
+            background: linear-gradient(135deg, #ff0080, #ff00cc);
+            box-shadow: 0 0 15px rgba(255, 0, 200, 0.5);
+        }
+
+        .player-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00ccff, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .video-title {
+            background: linear-gradient(90deg, #ff00cc, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .player-subtitle {
+            color: #8a9bb8;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Video Player */
+        .video-container {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border: 2px solid rgba(0, 150, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            background: #000;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            max-height: 300px;
+            display: block;
+            border-radius: 13px;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            color: #8a9bb8;
+            padding: 40px;
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: rgba(0, 150, 255, 0.3);
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Audio Visualizer */
+        .audio-container {
+            height: 150px;
+            background: rgba(5, 10, 25, 0.8);
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(0, 150, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-placeholder {
+            text-align: center;
+            color: #8a9bb8;
+            padding: 40px;
+        }
+
+        .audio-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: rgba(0, 150, 255, 0.3);
+        }
+
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 5px;
+            height: 100px;
+            width: 80%;
+        }
+
+        .bar {
+            width: 12px;
+            background: linear-gradient(to top, #0080ff, #00ffff);
+            border-radius: 6px 6px 0 0;
+            animation: pulse 1.5s ease-in-out infinite alternate;
+        }
+
+        .bar:nth-child(2n) {
+            background: linear-gradient(to top, #ff0080, #ff00cc);
+            animation-delay: 0.2s;
+        }
+
+        .bar:nth-child(3n) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0% { height: 20px; }
+            100% { height: 80px; }
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0080ff, #00ccff);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+        }
+
+        .video-btn {
+            background: linear-gradient(135deg, #ff0080, #ff00cc);
+            box-shadow: 0 0 15px rgba(255, 0, 200, 0.5);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 200, 255, 0.8);
+        }
+
+        .video-btn:hover {
+            box-shadow: 0 0 25px rgba(255, 0, 200, 0.8);
+        }
+
+        .time-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 20, 40, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            flex-grow: 1;
+        }
+
+        .time-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #00ffff;
+            letter-spacing: 2px;
+        }
+
+        .time-label {
+            color: #8a9bb8;
+            font-size: 0.9rem;
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 20, 40, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+        }
+
+        .volume-icon {
+            color: #00ccff;
+            font-size: 1.2rem;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 6px;
+            -webkit-appearance: none;
+            background: rgba(0, 100, 200, 0.3);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00ccff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.8);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 50, 100, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0080ff, #00ffff);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s linear;
+            position: relative;
+        }
+
+        .video-progress {
+            background: linear-gradient(90deg, #ff0080, #ff00cc);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            color: #8a9bb8;
+            font-size: 0.9rem;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 150, 255, 0.2);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #00ffff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #8a9bb8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 150, 255, 0.2);
+            color: #8a9bb8;
+            font-size: 0.9rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 50, 100, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ccff;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: rgba(0, 150, 255, 0.5);
+            transform: translateY(-5px);
+            color: white;
+        }
+
+        /* Glowing effect */
+        .glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: -1;
+        }
+
+        .glow-1 {
+            top: 10%;
+            left: 10%;
+        }
+
+        .glow-2 {
+            bottom: 10%;
+            right: 10%;
+            background: radial-gradient(circle, rgba(255, 0, 200, 0.1) 0%, transparent 70%);
+        }
+
+        /* Upload Status */
+        .upload-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 15, 30, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .upload-status.show {
+            display: flex;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+            color: #00ffff;
+        }
+
+        .status-text {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="grid-lines"></div>
+    <div class="particles" id="particles"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <!-- Upload Status Notification -->
+    <div class="upload-status" id="uploadStatus">
+        <i class="fas fa-check-circle status-icon" id="statusIcon"></i>
+        <div class="status-text" id="statusText">File uploaded successfully!</div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo">Media Player</h1>
+            <p class="tagline">UPLOAD YOUR OWN VIDEOS & AUDIO</p>
+        </header>
+
+        <!-- Upload Panel -->
+        <div class="upload-panel">
+            <h2><i class="fas fa-cloud-upload-alt"></i> UPLOAD YOUR MEDIA</h2>
+            
+            <div class="upload-options">
+                <!-- Video Upload -->
+                <div class="upload-box" onclick="document.getElementById('videoUpload').click()">
+                    <div class="upload-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="upload-title">Upload Video</div>
+                    <div class="upload-subtitle">MP4, WebM, MOV up to 100MB</div>
+                    <button class="upload-btn" onclick="document.getElementById('videoUpload').click()">
+                        <i class="fas fa-upload"></i> Choose Video
+                    </button>
+                    <input type="file" id="videoUpload" class="file-input" accept="video/*">
+                </div>
+
+                <!-- Audio Upload -->
+                <div class="upload-box" onclick="document.getElementById('audioUpload').click()">
+                    <div class="upload-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="upload-title">Upload Audio</div>
+                    <div class="upload-subtitle">MP3, WAV, OGG up to 50MB</div>
+                    <button class="upload-btn audio-upload-btn" onclick="document.getElementById('audioUpload').click()">
+                        <i class="fas fa-upload"></i> Choose Audio
+                    </button>
+                    <input type="file" id="audioUpload" class="file-input" accept="audio/*">
+                </div>
+            </div>
+
+            <!-- Video File Info -->
+            <div class="file-info" id="videoFileInfo">
+                <h4><i class="fas fa-video"></i> Video File Ready</h4>
+                <div class="file-details">
+                    <span id="videoFileName">No file selected</span>
+                    <span id="videoFileSize">0 MB</span>
+                </div>
+            </div>
+
+            <!-- Audio File Info -->
+            <div class="file-info" id="audioFileInfo">
+                <h4><i class="fas fa-music"></i> Audio File Ready</h4>
+                <div class="file-details">
+                    <span id="audioFileName">No file selected</span>
+                    <span id="audioFileSize">0 MB</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Video Player Card -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-icon video-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <h2 class="player-title video-title">YOUR VIDEO</h2>
+                        <p class="player-subtitle">Upload your own gameplay or clips</p>
+                    </div>
+                </div>
+
+                <div class="video-container" id="videoContainer">
+                    <!-- Video placeholder when no file is uploaded -->
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <i class="fas fa-video-slash"></i>
+                        <p>No video uploaded yet</p>
+                        <p>Upload a video file to get started</p>
+                    </div>
+                    
+                    <!-- Actual video element -->
+                    <video id="videoPlayer" style="display: none;">
+                        Your browser does not support the video tag.
+                    </video>
+                    
+                    <div class="video-overlay" style="display: none;" id="videoOverlay">
+                        <span class="time-display" id="videoCurrentTime">00:00</span>
+                        <span class="time-display" id="videoDuration">00:00</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="play-btn video-btn" id="videoPlayPause" disabled>
+                        <i class="fas fa-play"></i>
+                    </button>
+                    
+                    <div class="time-info">
+                        <span class="time-label">CURRENT</span>
+                        <span class="time-display" id="videoCurrentTime2">00:00</span>
+                        <span class="time-label">/</span>
+                        <span class="time-display" id="videoDuration2">00:00</span>
+                    </div>
+                    
+                    <div class="volume-container">
+                        <i class="fas fa-volume-up volume-icon" id="videoVolIcon"></i>
+                        <input type="range" class="volume-slider" id="videoVolume" value="80" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill video-progress" id="videoProgressFill"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>0:00</span>
+                        <span>PLAYBACK</span>
+                        <span id="videoTotalTime">0:00</span>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="videoBitrate">--</div>
+                        <div class="stat-label">QUALITY</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="videoFPS">--</div>
+                        <div class="stat-label">FPS</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="videoRes">--</div>
+                        <div class="stat-label">RESOLUTION</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio Player Card -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <div>
+                        <h2 class="player-title">YOUR AUDIO</h2>
+                        <p class="player-subtitle">Upload your own music or sounds</p>
+                    </div>
+                </div>
+
+                <div class="audio-container" id="audioContainer">
+                    <!-- Audio placeholder when no file is uploaded -->
+                    <div class="audio-placeholder" id="audioPlaceholder">
+                        <i class="fas fa-music"></i>
+                        <p>No audio uploaded yet</p>
+                        <p>Upload an audio file to get started</p>
+                    </div>
+                    
+                    <!-- Visualizer (shown when audio is playing) -->
+                    <div class="visualizer" id="visualizer" style="display: none;">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="play-btn" id="audioPlayPause" disabled>
+                        <i class="fas fa-play"></i>
+                    </button>
+                    
+                    <div class="time-info">
+                        <span class="time-label">CURRENT</span>
+                        <span class="time-display" id="audioCurrentTime">00:00</span>
+                        <span class="time-label">/</span>
+                        <span class="time-display" id="audioDuration">00:00</span>
+                    </div>
+                    
+                    <div class="volume-container">
+                        <i class="fas fa-volume-up volume-icon" id="audioVolIcon"></i>
+                        <input type="range" class="volume-slider" id="audioVolume" value="80" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="audioProgressFill"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>0:00</span>
+                        <span>TRACK PROGRESS</span>
+                        <span id="audioTotalTime">0:00</span>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="audioBitrate">--</div>
+                        <div class="stat-label">BITRATE</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="audioFormat">--</div>
+                        <div class="stat-label">FORMAT</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="audioLength">--</div>
+                        <div class="stat-label">LENGTH</div>
+                    </div>
+                </div>
+                
+                <!-- Audio element -->
+                <audio id="audioPlayer" style="display: none;">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <footer>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitch"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-steam"></i></a>
+            </div>
+            <p>NEXUS MEDIA HUB | Upload & Play Your Own Content</p>
+            <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">© 2026 Rajavarapu Siva Kumar. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Upload Status Notification
+        function showUploadStatus(message, isSuccess = true) {
+            const status = document.getElementById('uploadStatus');
+            const icon = document.getElementById('statusIcon');
+            const text = document.getElementById('statusText');
+            
+            text.textContent = message;
+            icon.className = isSuccess ? 'fas fa-check-circle status-icon' : 'fas fa-exclamation-circle status-icon';
+            status.classList.add('show');
+            
+            setTimeout(() => {
+                status.classList.remove('show');
+            }, 3000);
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // Format time from seconds to MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // VIDEO UPLOAD HANDLER
+        const videoUpload = document.getElementById('videoUpload');
+        const videoFileInfo = document.getElementById('videoFileInfo');
+        const videoFileName = document.getElementById('videoFileName');
+        const videoFileSize = document.getElementById('videoFileSize');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const videoOverlay = document.getElementById('videoOverlay');
+        const videoPlayPauseBtn = document.getElementById('videoPlayPause');
+        const videoCurrentTime = document.getElementById('videoCurrentTime');
+        const videoCurrentTime2 = document.getElementById('videoCurrentTime2');
+        const videoDuration = document.getElementById('videoDuration');
+        const videoDuration2 = document.getElementById('videoDuration2');
+        const videoVolume = document.getElementById('videoVolume');
+        const videoVolIcon = document.getElementById('videoVolIcon');
+        const videoProgressFill = document.getElementById('videoProgressFill');
+        const videoTotalTime = document.getElementById('videoTotalTime');
+        const videoBitrate = document.getElementById('videoBitrate');
+        const videoFPS = document.getElementById('videoFPS');
+        const videoRes = document.getElementById('videoRes');
+
+        videoUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check if it's a video file
+            if (!file.type.startsWith('video/')) {
+                showUploadStatus('Please select a video file (MP4, WebM, etc.)', false);
+                return;
+            }
+            
+            // Check file size (limit to 100MB)
+            if (file.size > 100 * 1024 * 1024) {
+                showUploadStatus('Video file is too large. Maximum size is 100MB.', false);
+                return;
+            }
+            
+            // Show file info
+            videoFileName.textContent = file.name;
+            videoFileSize.textContent = formatFileSize(file.size);
+            videoFileInfo.classList.add('show');
+            
+            // Create object URL for the video
+            const videoURL = URL.createObjectURL(file);
+            
+            // Set video source
+            videoPlayer.src = videoURL;
+            
+            // Show video player and hide placeholder
+            videoPlaceholder.style.display = 'none';
+            videoPlayer.style.display = 'block';
+            videoOverlay.style.display = 'flex';
+            
+            // Enable play button
+            videoPlayPauseBtn.disabled = false;
+            
+            // Show success message
+            showUploadStatus(`Video "${file.name}" uploaded successfully!`);
+            
+            // Reset video player state
+            videoPlayer.load();
+            
+            // Set video metadata when loaded
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                const duration = formatTime(videoPlayer.duration);
+                videoDuration.textContent = duration;
+                videoDuration2.textContent = duration;
+                videoTotalTime.textContent = duration;
+                
+                // Get video dimensions
+                const width = videoPlayer.videoWidth;
+                const height = videoPlayer.videoHeight;
+                videoRes.textContent = `${width}×${height}`;
+                
+                // Estimate bitrate (simplified calculation)
+                const bitrate = Math.round((file.size * 8) / videoPlayer.duration / 1000);
+                videoBitrate.textContent = bitrate > 1000 ? `${(bitrate/1000).toFixed(1)}Mbps` : `${bitrate}Kbps`;
+                
+                // Estimate FPS (simulate based on file size)
+                const estimatedFPS = width > 1920 ? 60 : width > 1280 ? 30 : 24;
+                videoFPS.textContent = estimatedFPS;
+            });
+        });
+
+        // AUDIO UPLOAD HANDLER
+        const audioUpload = document.getElementById('audioUpload');
+        const audioFileInfo = document.getElementById('audioFileInfo');
+        const audioFileName = document.getElementById('audioFileName');
+        const audioFileSize = document.getElementById('audioFileSize');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioPlaceholder = document.getElementById('audioPlaceholder');
+        const visualizer = document.getElementById('visualizer');
+        const audioPlayPauseBtn = document.getElementById('audioPlayPause');
+        const audioCurrentTime = document.getElementById('audioCurrentTime');
+        const audioDuration = document.getElementById('audioDuration');
+        const audioVolume = document.getElementById('audioVolume');
+        const audioVolIcon = document.getElementById('audioVolIcon');
+        const audioProgressFill = document.getElementById('audioProgressFill');
+        const audioTotalTime = document.getElementById('audioTotalTime');
+        const audioBitrate = document.getElementById('audioBitrate');
+        const audioFormat = document.getElementById('audioFormat');
+        const audioLength = document.getElementById('audioLength');
+        const bars = visualizer.querySelectorAll('.bar');
+
+        audioUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check if it's an audio file
+            if (!file.type.startsWith('audio/')) {
+                showUploadStatus('Please select an audio file (MP3, WAV, etc.)', false);
+                return;
+            }
+            
+            // Check file size (limit to 50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                showUploadStatus('Audio file is too large. Maximum size is 50MB.', false);
+                return;
+            }
+            
+            // Show file info
+            audioFileName.textContent = file.name;
+            audioFileSize.textContent = formatFileSize(file.size);
+            audioFileInfo.classList.add('show');
+            
+            // Create object URL for the audio
+            const audioURL = URL.createObjectURL(file);
+            
+            // Set audio source
+            audioPlayer.src = audioURL;
+            
+            // Show visualizer and hide placeholder
+            audioPlaceholder.style.display = 'none';
+            visualizer.style.display = 'flex';
+            
+            // Enable play button
+            audioPlayPauseBtn.disabled = false;
+            
+            // Show success message
+            showUploadStatus(`Audio "${file.name}" uploaded successfully!`);
+            
+            // Reset audio player state
+            audioPlayer.load();
+            
+            // Set audio metadata when loaded
+            audioPlayer.addEventListener('loadedmetadata', function() {
+                const duration = formatTime(audioPlayer.duration);
+                audioDuration.textContent = duration;
+                audioTotalTime.textContent = duration;
+                
+                // Set format
+                const format = file.type.split('/')[1].toUpperCase();
+                audioFormat.textContent = format;
+                
+                // Estimate bitrate
+                const bitrate = Math.round((file.size * 8) / audioPlayer.duration / 1000);
+                audioBitrate.textContent = `${bitrate} Kbps`;
+                
+                // Set length in minutes
+                const minutes = (audioPlayer.duration / 60).toFixed(1);
+                audioLength.textContent = `${minutes} min`;
+            });
+        });
+
+        // VIDEO PLAYER CONTROLS
+        // Update current time as video plays
+        videoPlayer.addEventListener('timeupdate', function() {
+            const current = formatTime(videoPlayer.currentTime);
+            videoCurrentTime.textContent = current;
+            videoCurrentTime2.textContent = current;
+            
+            // Update progress bar
+            if (videoPlayer.duration) {
+                const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+                videoProgressFill.style.width = progress + '%';
+            }
+        });
+
+        // Play/Pause button functionality
+        videoPlayPauseBtn.addEventListener('click', function() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                videoPlayPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                videoPlayer.pause();
+                videoPlayPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        // Update video volume
+        videoVolume.addEventListener('input', function() {
+            videoPlayer.volume = this.value / 100;
+            updateVolumeIcon(videoVolIcon, this.value);
+        });
+
+        // Click on progress bar to seek
+        videoProgressFill.parentElement.addEventListener('click', function(e) {
+            if (!videoPlayer.duration) return;
+            
+            const rect = this.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            videoPlayer.currentTime = percent * videoPlayer.duration;
+        });
+
+        // AUDIO PLAYER CONTROLS
+        // Update current time as audio plays
+        audioPlayer.addEventListener('timeupdate', function() {
+            const current = formatTime(audioPlayer.currentTime);
+            audioCurrentTime.textContent = current;
+            
+            // Update progress bar
+            if (audioPlayer.duration) {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                audioProgressFill.style.width = progress + '%';
+            }
+            
+            // Animate visualizer bars
+            if (!audioPlayer.paused) {
+                bars.forEach((bar, index) => {
+                    const height = 20 + Math.random() * 60;
+                    bar.style.height = height + 'px';
+                    bar.style.animationDelay = (index * 0.1) + 's';
+                });
+            }
+        });
+
+        // Play/Pause button functionality
+        audioPlayPauseBtn.addEventListener('click', function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                audioPlayPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                visualizer.style.opacity = '1';
+            } else {
+                audioPlayer.pause();
+                audioPlayPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                visualizer.style.opacity = '0.7';
+            }
+        });
+
+        // Update audio volume
+        audioVolume.addEventListener('input', function() {
+            audioPlayer.volume = this.value / 100;
+            updateVolumeIcon(audioVolIcon, this.value);
+        });
+
+        // Click on progress bar to seek
+        audioProgressFill.parentElement.addEventListener('click', function(e) {
+            if (!audioPlayer.duration) return;
+            
+            const rect = this.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+
+        // Volume icon update function
+        function updateVolumeIcon(icon, volume) {
+            if (volume == 0) {
+                icon.className = 'fas fa-volume-mute volume-icon';
+            } else if (volume < 30) {
+                icon.className = 'fas fa-volume-down volume-icon';
+            } else if (volume < 70) {
+                icon.className = 'fas fa-volume-up volume-icon';
+            } else {
+                icon.className = 'fas fa-volume-up volume-icon';
+            }
+        }
+
+        // Initialize volume icons
+        updateVolumeIcon(videoVolIcon, videoVolume.value);
+        updateVolumeIcon(audioVolIcon, audioVolume.value);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Spacebar toggles play/pause for focused player
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (e.target === videoPlayPauseBtn || e.target === videoPlayer) {
+                    if (!videoPlayPauseBtn.disabled) videoPlayPauseBtn.click();
+                } else if (e.target === audioPlayPauseBtn || e.target === audioPlayer) {
+                    if (!audioPlayPauseBtn.disabled) audioPlayPauseBtn.click();
+                }
+            }
+            
+            // Arrow keys for volume control
+            if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (e.target === videoPlayer || e.target === videoPlayPauseBtn) {
+                    videoVolume.value = Math.min(100, parseInt(videoVolume.value) + 10);
+                    videoVolume.dispatchEvent(new Event('input'));
+                } else {
+                    audioVolume.value = Math.min(100, parseInt(audioVolume.value) + 10);
+                    audioVolume.dispatchEvent(new Event('input'));
+                }
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                if (e.target === videoPlayer || e.target === videoPlayPauseBtn) {
+                    videoVolume.value = Math.max(0, parseInt(videoVolume.value) - 10);
+                    videoVolume.dispatchEvent(new Event('input'));
+                } else {
+                    audioVolume.value = Math.max(0, parseInt(audioVolume.value) - 10);
+                    audioVolume.dispatchEvent(new Event('input'));
+                }
+            }
+        });
+
+        // Drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            document.body.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            document.body.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            document.body.style.border = '3px dashed #00ffff';
+        }
+
+        function unhighlight(e) {
+            document.body.style.border = 'none';
+        }
+
+        document.body.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            // Check if files are video or audio
+            for (let file of files) {
+                if (file.type.startsWith('video/')) {
+                    // Simulate video file selection
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    videoUpload.files = dataTransfer.files;
+                    videoUpload.dispatchEvent(new Event('change'));
+                    break;
+                } else if (file.type.startsWith('audio/')) {
+                    // Simulate audio file selection
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    audioUpload.files = dataTransfer.files;
+                    audioUpload.dispatchEvent(new Event('change'));
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
