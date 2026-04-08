@@ -1,0 +1,2551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShop India - Intelligent Shopping Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #2ec4b6;
+            --secondary-dark: #24a99d;
+            --accent: #ff6b6b;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #e63946;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3e7f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+            border: 1px solid rgba(67, 97, 238, 0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .logo-text h1 {
+            color: var(--dark);
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        .time-display {
+            background: linear-gradient(135deg, var(--dark), #3d405b);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .time-display i {
+            color: var(--secondary);
+        }
+        
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9ff, #eef1ff);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(67, 97, 238, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .stat-info h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Products Section */
+        .products-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        
+        .section-header h2 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-header h2 i {
+            color: var(--primary);
+        }
+        
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            color: #6c757d;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-btn.active, .category-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .product-image {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .product-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to top, rgba(255,255,255,0.9), transparent);
+        }
+        
+        .product-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(67, 97, 238, 0.9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+            height: 60px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            font-weight: 800;
+            color: var(--success);
+            font-size: 1.5rem;
+            margin: 15px 0;
+        }
+        
+        .product-price::before {
+            content: "₹";
+        }
+        
+        .product-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f9fa;
+            padding: 5px;
+            border-radius: 50px;
+        }
+        
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+        
+        .quantity-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+        
+        .add-to-cart {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 196, 182, 0.3);
+        }
+        
+        /* Cart Section */
+        .cart-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        
+        .cart-count {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .cart-items {
+            margin-bottom: 25px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .cart-items::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .cart-items::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .cart-items::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            margin-bottom: 12px;
+            border: 1px solid #eaeaea;
+            transition: all 0.3s;
+        }
+        
+        .cart-item:hover {
+            background: #f0f2f5;
+            transform: translateX(5px);
+        }
+        
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            background-size: cover;
+            background-position: center;
+            margin-right: 15px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .cart-item-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--success);
+        }
+        
+        .cart-item-price::before {
+            content: "₹";
+        }
+        
+        .cart-item-quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cart-item-total {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-left: 10px;
+            min-width: 100px;
+            text-align: right;
+        }
+        
+        .cart-item-total::before {
+            content: "₹";
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6c757d;
+        }
+        
+        .cart-empty i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #dee2e6;
+        }
+        
+        .cart-summary {
+            background: linear-gradient(135deg, #4361ee, #3a56d4);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .cart-summary-item h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+        
+        .cart-summary-item p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .discounts-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .discounts-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .discount-item {
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        
+        .discount-item:last-child {
+            border-bottom: none;
+        }
+        
+        .discount-name {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .discount-value {
+            font-weight: 700;
+            color: var(--danger);
+        }
+        
+        .discount-value::before {
+            content: "-₹";
+        }
+        
+        .total-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #eaeaea;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 1.1rem;
+        }
+        
+        .total-label {
+            color: #6c757d;
+        }
+        
+        .total-amount {
+            font-weight: 900;
+            font-size: 2.2rem;
+            color: var(--dark);
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .total-amount::before {
+            content: "₹";
+        }
+        
+        #subtotal::before, #total-discount::before, #total::before {
+            content: "₹";
+        }
+        
+        .coupon-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .coupon-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        input, select, textarea {
+            padding: 14px 18px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        button {
+            padding: 14px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .apply-coupon {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        }
+        
+        .apply-coupon:hover {
+            background: linear-gradient(135deg, var(--secondary-dark), #1d9c8f);
+        }
+        
+        .remove-btn {
+            background: linear-gradient(135deg, var(--danger), #c0392b);
+        }
+        
+        .remove-btn:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        #checkout-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            flex: 1;
+        }
+        
+        #checkout-btn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+        }
+        
+        /* Customer Details Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.5s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .modal-header h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--danger);
+        }
+        
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .payment-option {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f2f5;
+        }
+        
+        /* Invoice Modal */
+        .invoice-content {
+            background: white;
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        .invoice-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .invoice-header h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .invoice-body {
+            padding: 40px;
+        }
+        
+        .invoice-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .invoice-from h3, .invoice-to h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .invoice-table thead {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .invoice-table th {
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .invoice-table td {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .invoice-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .invoice-total {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .invoice-total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            font-size: 1.2rem;
+        }
+        
+        .invoice-grand-total {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            border-top: 3px solid #dee2e6;
+            margin-top: 15px;
+            padding-top: 20px;
+        }
+        
+        .invoice-footer {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-top: 40px;
+            border-radius: 15px;
+        }
+        
+        .invoice-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .print-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        }
+        
+        .close-invoice-btn {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+        }
+        
+        /* Rules Section */
+        .rules-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+        
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .rule-card {
+            background: linear-gradient(135deg, #f8f9ff, #eef1ff);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.15);
+        }
+        
+        .rule-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary), var(--success));
+        }
+        
+        .rule-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .rule-title {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .rule-description {
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .rule-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 25px;
+            background: var(--success);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 400px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger), #c0392b);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success), #45a049);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning), #e68900);
+        }
+        
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .cart-summary {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .invoice-details {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-top">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>SmartShop India</h1>
+                        <p>Intelligent Shopping Cart with Real-Time Discounts</p>
+                    </div>
+                </div>
+                <div class="time-display" id="time-display">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div id="current-time">Loading...</div>
+                        <div id="current-date" style="font-size: 0.8rem; opacity: 0.9;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-items">0</h3>
+                        <p>Items in Cart</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-discounts">₹0</h3>
+                        <p>Total Savings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-rules">0</h3>
+                        <p>Active Discounts</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Products Section -->
+            <section class="products-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-shopping-bag"></i> Available Products</h2>
+                    <div class="category-filter" id="category-filter">
+                        <!-- Categories will be added dynamically -->
+                    </div>
+                </div>
+                
+                <div class="product-grid" id="product-list">
+                    <!-- Products will be dynamically added here -->
+                </div>
+            </section>
+            
+            <!-- Cart Section -->
+            <section class="cart-section">
+                <div class="cart-header">
+                    <h2><i class="fas fa-shopping-cart"></i> Shopping Cart</h2>
+                    <div class="cart-count" id="cart-count">0</div>
+                </div>
+                
+                <div class="cart-items" id="cart-items">
+                    <div class="cart-empty" id="empty-cart-message">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Your Cart is Empty</h3>
+                        <p>Add some products to see them here</p>
+                    </div>
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="cart-summary-item">
+                        <h3 id="summary-items">0</h3>
+                        <p>Items</p>
+                    </div>
+                    <div class="cart-summary-item">
+                        <h3 id="summary-subtotal">₹0</h3>
+                        <p>Subtotal</p>
+                    </div>
+                    <div class="cart-summary-item">
+                        <h3 id="summary-savings">₹0</h3>
+                        <p>Savings</p>
+                    </div>
+                </div>
+                
+                <div class="discounts-section">
+                    <h3><i class="fas fa-tag"></i> Applied Discounts</h3>
+                    <div id="discounts-list">
+                        <p style="color: #6c757d; text-align: center;">No discounts applied yet</p>
+                    </div>
+                </div>
+                
+                <div class="total-section">
+                    <div class="total-row">
+                        <span class="total-label">Subtotal:</span>
+                        <span id="subtotal">0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">Discounts:</span>
+                        <span id="total-discount">0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">GST (18%):</span>
+                        <span id="gst-amount">0.00</span>
+                    </div>
+                    <div class="total-row total-amount">
+                        <span>Grand Total:</span>
+                        <span id="total">0.00</span>
+                    </div>
+                </div>
+                
+                <div class="coupon-section">
+                    <h3><i class="fas fa-ticket-alt"></i> Apply Coupon</h3>
+                    <p style="color: #6c757d; margin-bottom: 10px;">Try: <strong>SAVE10</strong> (10% off), <strong>FLASH25</strong> (25% off on 3+ items)</p>
+                    <div class="coupon-input">
+                        <input type="text" id="coupon-code" placeholder="Enter coupon code">
+                        <button class="apply-coupon" id="apply-coupon">
+                            <i class="fas fa-check-circle"></i> Apply
+                        </button>
+                    </div>
+                    <p id="coupon-message" style="margin-top: 10px; min-height: 20px;"></p>
+                </div>
+                
+                <div class="cart-actions">
+                    <button id="clear-cart" class="remove-btn">
+                        <i class="fas fa-trash-alt"></i> Clear Cart
+                    </button>
+                    <button id="checkout-btn">
+                        <i class="fas fa-lock"></i> Proceed to Buy
+                    </button>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Rules Section -->
+        <section class="rules-section">
+            <div class="section-header">
+                <h2><i class="fas fa-gavel"></i> Active Discount Rules</h2>
+            </div>
+            <div class="rules-grid" id="rules-list">
+                <!-- Rules will be dynamically added here -->
+            </div>
+        </section>
+        
+        <!-- Customer Details Modal -->
+        <div class="modal-overlay" id="customer-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-user-check"></i> Customer Details</h2>
+                    <p>Please fill in your information to proceed with payment</p>
+                </div>
+                <div class="modal-body">
+                    <form id="customer-form">
+                        <div class="form-section">
+                            <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="customer-name" class="required">Full Name</label>
+                                    <input type="text" id="customer-name" required placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer-email" class="required">Email Address</label>
+                                    <input type="email" id="customer-email" required placeholder="example@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer-phone" class="required">Phone Number</label>
+                                    <input type="tel" id="customer-phone" required placeholder="+91 98765 43210">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3><i class="fas fa-map-marker-alt"></i> Shipping Address</h3>
+                            <div class="form-group">
+                                <label for="customer-address" class="required">Complete Address</label>
+                                <textarea id="customer-address" rows="3" required placeholder="House no, Street, Area, City, State, PIN Code"></textarea>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="customer-city" class="required">City</label>
+                                    <input type="text" id="customer-city" required placeholder="Enter your city">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer-state" class="required">State</label>
+                                    <input type="text" id="customer-state" required placeholder="Enter your state">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customer-pincode" class="required">PIN Code</label>
+                                    <input type="text" id="customer-pincode" required placeholder="6-digit PIN code">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                            <div class="payment-options" id="payment-options">
+                                <div class="payment-option" data-method="credit-card">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <h4>Credit Card</h4>
+                                    <p>Visa, MasterCard, Amex</p>
+                                </div>
+                                <div class="payment-option" data-method="debit-card">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <h4>Debit Card</h4>
+                                    <p>Visa, MasterCard, RuPay</p>
+                                </div>
+                                <div class="payment-option" data-method="upi">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <h4>UPI</h4>
+                                    <p>Google Pay, PhonePe, Paytm</p>
+                                </div>
+                                <div class="payment-option" data-method="netbanking">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                    <h4>Net Banking</h4>
+                                    <p>All Indian Banks</p>
+                                </div>
+                                <div class="payment-option" data-method="cod">
+                                    <div class="payment-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <h4>Cash on Delivery</h4>
+                                    <p>Pay when delivered</p>
+                                </div>
+                            </div>
+                            <input type="hidden" id="payment-method" required>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button type="button" id="cancel-checkout" class="remove-btn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            <button type="submit" id="submit-order">
+                                <i class="fas fa-check-circle"></i> Confirm & Generate Invoice
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Invoice Modal -->
+        <div class="modal-overlay" id="invoice-modal">
+            <div class="invoice-content">
+                <div class="invoice-header">
+                    <h2><i class="fas fa-receipt"></i> INVOICE</h2>
+                    <p>Thank you for your purchase!</p>
+                </div>
+                
+                <div class="invoice-body">
+                    <div class="invoice-details">
+                        <div class="invoice-from">
+                            <h3>From:</h3>
+                            <p><strong>SmartShop India Pvt. Ltd.</strong></p>
+                            <p>123 MG Road, Bangalore</p>
+                            <p>Karnataka 560001, India</p>
+                            <p>GSTIN: 29AABCS1429B1Z5</p>
+                            <p>Phone: +91 80 1234 5678</p>
+                            <p>Email: billing@smartshop.in</p>
+                        </div>
+                        
+                        <div class="invoice-to">
+                            <h3>Bill To:</h3>
+                            <p id="invoice-customer-name">Customer Name</p>
+                            <p id="invoice-customer-address">Customer Address</p>
+                            <p id="invoice-customer-phone">Customer Phone</p>
+                            <p id="invoice-customer-email">Customer Email</p>
+                            <p><strong>Invoice #:</strong> <span id="invoice-number">INV-001</span></p>
+                            <p><strong>Date:</strong> <span id="invoice-date">01/01/2023</span></p>
+                        </div>
+                    </div>
+                    
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items">
+                            <!-- Invoice items will be added here -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total">
+                        <div class="invoice-total-row">
+                            <span>Subtotal:</span>
+                            <span id="invoice-subtotal">₹ 0.00</span>
+                        </div>
+                        <div class="invoice-total-row">
+                            <span>Discounts:</span>
+                            <span id="invoice-discount">-₹ 0.00</span>
+                        </div>
+                        <div class="invoice-total-row">
+                            <span>GST (18%):</span>
+                            <span id="invoice-gst">₹ 0.00</span>
+                        </div>
+                        <div class="invoice-total-row invoice-grand-total">
+                            <span>Grand Total:</span>
+                            <span id="invoice-total">₹ 0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-footer">
+                        <p><strong>Payment Status:</strong> <span id="payment-status" style="color: var(--success); font-weight: 700;">PAID</span></p>
+                        <p><strong>Payment Method:</strong> <span id="payment-method-display">Credit Card</span></p>
+                        <p><strong>Terms:</strong> Payment due within 30 days | Goods sold are not returnable</p>
+                        <p style="margin-top: 15px; font-style: italic;">Thank you for shopping with SmartShop India!</p>
+                    </div>
+                    
+                    <div class="invoice-actions">
+                        <button id="print-invoice" class="print-btn">
+                            <i class="fas fa-print"></i> Print Invoice
+                        </button>
+                        <button id="close-invoice" class="close-invoice-btn">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notification -->
+        <div class="notification" id="notification">
+            <div class="notification-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div>
+                <div id="notification-title" style="font-weight: 600;">Success</div>
+                <div id="notification-text">Product added to cart!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced product data with accurate Indian pricing
+        const products = [
+            { 
+                id: 1, 
+                name: "MacBook Air M2", 
+                price: 114990, 
+                category: "Electronics", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "Apple M2 chip, 8GB RAM, 256GB SSD - Latest Model",
+                badge: "BESTSELLER"
+            },
+            { 
+                id: 2, 
+                name: "iPhone 14 Pro", 
+                price: 129900, 
+                category: "Electronics", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "6.1-inch Super Retina XDR display, 256GB Storage",
+                badge: "NEW"
+            },
+            { 
+                id: 3, 
+                name: "Sony WH-1000XM5", 
+                price: 32990, 
+                category: "Electronics", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "Industry-leading noise cancellation headphones",
+                badge: "TOP RATED"
+            },
+            { 
+                id: 4, 
+                name: "Nike Air Max 270", 
+                price: 10999, 
+                category: "Clothing", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "Men's running shoes with Max Air cushioning",
+                badge: "TRENDING"
+            },
+            { 
+                id: 5, 
+                name: "Levi's 501 Jeans", 
+                price: 4299, 
+                category: "Clothing", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "Original fit jeans, classic straight leg - Blue",
+                badge: "CLASSIC"
+            },
+            { 
+                id: 6, 
+                name: "JavaScript: The Definitive Guide", 
+                price: 1499, 
+                category: "Books", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "7th Edition - Comprehensive JavaScript reference by O'Reilly",
+                badge: "BESTSELLER"
+            },
+            { 
+                id: 7, 
+                name: "Milton Thermosteel Flask 1L", 
+                price: 1799, 
+                category: "Home", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "Stainless Steel Flask, 24 Hours Hot/Cold Retention",
+                badge: "POPULAR"
+            },
+            { 
+                id: 8, 
+                name: "Cosco Football Size 5", 
+                price: 899, 
+                category: "Sports", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "FIFA approved football, perfect for matches",
+                badge: "VALUE"
+            },
+            { 
+                id: 9, 
+                name: "Apple Watch Series 8", 
+                price: 45900, 
+                category: "Electronics", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1579586337278-3f6a89f8c7e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "GPS, 45mm Midnight Aluminum Case with Sport Band",
+                badge: "NEW"
+            },
+            { 
+                id: 10, 
+                name: "Adidas Ultraboost 22", 
+                price: 16999, 
+                category: "Clothing", 
+                quantity: 0,
+                image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                description: "Women's running shoes with responsive cushioning",
+                badge: "PREMIUM"
+            }
+        ];
+
+        // Shopping cart data
+        let cart = [];
+        let appliedCoupons = [];
+        let currentCategory = 'all';
+        let invoiceCounter = 1000;
+
+        // Enhanced discount rules
+        const discountRules = [
+            {
+                id: 1,
+                name: "Electronics Bundle",
+                description: "Buy 2+ Electronics items, get 15% off Electronics total",
+                condition: (cart) => {
+                    const electronicsItems = cart.filter(item => item.category === "Electronics");
+                    const totalElectronicsQuantity = electronicsItems.reduce((sum, item) => sum + item.quantity, 0);
+                    return totalElectronicsQuantity >= 2;
+                },
+                calculate: (cart) => {
+                    const electronicsItems = cart.filter(item => item.category === "Electronics");
+                    const electronicsTotal = electronicsItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return {
+                        amount: electronicsTotal * 0.15,
+                        type: "percentage",
+                        value: "15%"
+                    };
+                }
+            },
+            {
+                id: 2,
+                name: "Fashion Lover",
+                description: "Buy 3+ Clothing items, get 25% off Clothing total",
+                condition: (cart) => {
+                    const clothingItems = cart.filter(item => item.category === "Clothing");
+                    const totalClothingQuantity = clothingItems.reduce((sum, item) => sum + item.quantity, 0);
+                    return totalClothingQuantity >= 3;
+                },
+                calculate: (cart) => {
+                    const clothingItems = cart.filter(item => item.category === "Clothing");
+                    const clothingTotal = clothingItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return {
+                        amount: clothingTotal * 0.25,
+                        type: "percentage",
+                        value: "25%"
+                    };
+                }
+            },
+            {
+                id: 3,
+                name: "Weekend Special",
+                description: "20% off total purchase on Saturdays & Sundays",
+                condition: () => {
+                    const today = new Date();
+                    const dayOfWeek = today.getDay();
+                    return dayOfWeek === 0 || dayOfWeek === 6;
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return {
+                        amount: subtotal * 0.20,
+                        type: "percentage",
+                        value: "20%"
+                    };
+                }
+            },
+            {
+                id: 4,
+                name: "Evening Shopper",
+                description: "12% off total between 7 PM and 11 PM",
+                condition: () => {
+                    const now = new Date();
+                    const currentHour = now.getHours();
+                    return currentHour >= 19 && currentHour < 23;
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return {
+                        amount: subtotal * 0.12,
+                        type: "percentage",
+                        value: "12%"
+                    };
+                }
+            },
+            {
+                id: 5,
+                name: "Premium Customer",
+                description: "Orders over ₹50,000 get ₹5,000 off automatically",
+                condition: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return subtotal > 50000;
+                },
+                calculate: () => {
+                    return {
+                        amount: 5000,
+                        type: "fixed",
+                        value: "₹5,000"
+                    };
+                }
+            },
+            {
+                id: 6,
+                name: "Early Bird",
+                description: "15% off total between 6 AM and 10 AM",
+                condition: () => {
+                    const now = new Date();
+                    const currentHour = now.getHours();
+                    return currentHour >= 6 && currentHour < 10;
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return {
+                        amount: subtotal * 0.15,
+                        type: "percentage",
+                        value: "15%"
+                    };
+                }
+            },
+            {
+                id: 7,
+                name: "Bookworm",
+                description: "Buy 2+ Books, get 30% off Books total",
+                condition: (cart) => {
+                    const bookItems = cart.filter(item => item.category === "Books");
+                    const totalBookQuantity = bookItems.reduce((sum, item) => sum + item.quantity, 0);
+                    return totalBookQuantity >= 2;
+                },
+                calculate: (cart) => {
+                    const bookItems = cart.filter(item => item.category === "Books");
+                    const bookTotal = bookItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return {
+                        amount: bookTotal * 0.30,
+                        type: "percentage",
+                        value: "30%"
+                    };
+                }
+            }
+        ];
+
+        // Coupon codes
+        const couponCodes = {
+            "SAVE10": { 
+                name: "SAVE10 Coupon", 
+                description: "10% off your total purchase",
+                validate: (cart, currentTime) => {
+                    return { valid: true, message: "" };
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return subtotal * 0.10;
+                }
+            },
+            "FLASH25": { 
+                name: "FLASH25 Coupon", 
+                description: "25% off when you buy 3 or more items",
+                validate: (cart, currentTime) => {
+                    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                    if (totalItems < 3) {
+                        return { valid: false, message: "This coupon requires at least 3 items in cart" };
+                    }
+                    return { valid: true, message: "" };
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return subtotal * 0.25;
+                }
+            },
+            "WEEKEND30": { 
+                name: "WEEKEND30 Coupon", 
+                description: "30% off on weekends (Saturday & Sunday)",
+                validate: (cart, currentTime) => {
+                    const today = new Date();
+                    const dayOfWeek = today.getDay();
+                    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                    
+                    if (!isWeekend) {
+                        return { valid: false, message: "This coupon is only valid on weekends" };
+                    }
+                    return { valid: true, message: "" };
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return subtotal * 0.30;
+                }
+            },
+            "MORNING15": { 
+                name: "MORNING15 Coupon", 
+                description: "15% off for morning shoppers (6 AM - 12 PM)",
+                validate: (cart, currentTime) => {
+                    const currentHour = currentTime.getHours();
+                    if (currentHour < 6 || currentHour >= 12) {
+                        return { valid: false, message: "This coupon is only valid between 6 AM and 12 PM" };
+                    }
+                    return { valid: true, message: "" };
+                },
+                calculate: (cart) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    return subtotal * 0.15;
+                }
+            },
+            "FREESHIP99": { 
+                name: "FREE Shipping", 
+                description: "Free shipping (₹99) on orders over ₹500",
+                validate: (cart, currentTime) => {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    if (subtotal < 500) {
+                        return { valid: false, message: "This coupon requires at least ₹500 purchase" };
+                    }
+                    return { valid: true, message: "" };
+                },
+                calculate: (cart) => {
+                    return 99;
+                }
+            }
+        };
+
+        // DOM elements
+        const productListElement = document.getElementById('product-list');
+        const cartItemsElement = document.getElementById('cart-items');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const discountsListElement = document.getElementById('discounts-list');
+        const subtotalElement = document.getElementById('subtotal');
+        const totalDiscountElement = document.getElementById('total-discount');
+        const gstAmountElement = document.getElementById('gst-amount');
+        const totalElement = document.getElementById('total');
+        const couponCodeInput = document.getElementById('coupon-code');
+        const applyCouponButton = document.getElementById('apply-coupon');
+        const couponMessageElement = document.getElementById('coupon-message');
+        const clearCartButton = document.getElementById('clear-cart');
+        const checkoutButton = document.getElementById('checkout-btn');
+        const currentTimeElement = document.getElementById('current-time');
+        const currentDateElement = document.getElementById('current-date');
+        const rulesListElement = document.getElementById('rules-list');
+        const categoryFilterElement = document.getElementById('category-filter');
+        const notificationElement = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notification-title');
+        const notificationText = document.getElementById('notification-text');
+        const cartCountElement = document.getElementById('cart-count');
+        const summaryItemsElement = document.getElementById('summary-items');
+        const summarySubtotalElement = document.getElementById('summary-subtotal');
+        const summarySavingsElement = document.getElementById('summary-savings');
+        const statItemsElement = document.getElementById('stat-items');
+        const statDiscountsElement = document.getElementById('stat-discounts');
+        const statRulesElement = document.getElementById('stat-rules');
+        
+        // Modal elements
+        const customerModal = document.getElementById('customer-modal');
+        const customerForm = document.getElementById('customer-form');
+        const cancelCheckoutButton = document.getElementById('cancel-checkout');
+        const submitOrderButton = document.getElementById('submit-order');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const paymentMethodInput = document.getElementById('payment-method');
+        
+        const invoiceModal = document.getElementById('invoice-modal');
+        const invoiceNumberElement = document.getElementById('invoice-number');
+        const invoiceDateElement = document.getElementById('invoice-date');
+        const invoiceItemsElement = document.getElementById('invoice-items');
+        const invoiceSubtotalElement = document.getElementById('invoice-subtotal');
+        const invoiceDiscountElement = document.getElementById('invoice-discount');
+        const invoiceGstElement = document.getElementById('invoice-gst');
+        const invoiceTotalElement = document.getElementById('invoice-total');
+        const invoiceCustomerName = document.getElementById('invoice-customer-name');
+        const invoiceCustomerAddress = document.getElementById('invoice-customer-address');
+        const invoiceCustomerPhone = document.getElementById('invoice-customer-phone');
+        const invoiceCustomerEmail = document.getElementById('invoice-customer-email');
+        const paymentMethodDisplay = document.getElementById('payment-method-display');
+        const printInvoiceButton = document.getElementById('print-invoice');
+        const closeInvoiceButton = document.getElementById('close-invoice');
+
+        // Initialize the application
+        function init() {
+            renderCategories();
+            renderProducts();
+            renderCart();
+            updateTime();
+            renderRules();
+            
+            // Update time every second
+            setInterval(updateTime, 1000);
+            
+            // Event listeners
+            applyCouponButton.addEventListener('click', applyCoupon);
+            clearCartButton.addEventListener('click', clearCart);
+            checkoutButton.addEventListener('click', openCustomerModal);
+            
+            // Modal event listeners
+            cancelCheckoutButton.addEventListener('click', closeCustomerModal);
+            customerForm.addEventListener('submit', handleOrderSubmit);
+            
+            // Payment option selection
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    paymentMethodInput.value = option.getAttribute('data-method');
+                });
+            });
+            
+            // Invoice event listeners
+            printInvoiceButton.addEventListener('click', printInvoice);
+            closeInvoiceButton.addEventListener('click', () => {
+                invoiceModal.style.display = 'none';
+                closeCustomerModal();
+            });
+            
+            // Allow Enter key to apply coupon
+            couponCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyCoupon();
+                }
+            });
+            
+            // Show initial notification
+            showNotification("Welcome to SmartShop India!", "Get ready for an intelligent shopping experience with real-time discounts", "info");
+        }
+
+        // Render category filters
+        function renderCategories() {
+            const categories = ['all', 'Electronics', 'Clothing', 'Books', 'Home', 'Sports'];
+            const categoryNames = {
+                'all': 'All Products',
+                'Electronics': 'Electronics',
+                'Clothing': 'Fashion',
+                'Books': 'Books',
+                'Home': 'Home & Kitchen',
+                'Sports': 'Sports'
+            };
+            
+            categoryFilterElement.innerHTML = '';
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = `category-btn ${category === 'all' ? 'active' : ''}`;
+                button.textContent = categoryNames[category];
+                button.setAttribute('data-category', category);
+                button.addEventListener('click', () => {
+                    currentCategory = category;
+                    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    renderProducts();
+                });
+                categoryFilterElement.appendChild(button);
+            });
+        }
+
+        // Render products based on selected category
+        function renderProducts() {
+            productListElement.innerHTML = '';
+            
+            const filteredProducts = currentCategory === 'all' 
+                ? products 
+                : products.filter(product => product.category === currentCategory);
+            
+            filteredProducts.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product-card fade-in';
+                productElement.innerHTML = `
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <div class="product-image" style="background-image: url('${product.image}')">
+                        <div class="product-category">${product.category}</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-price">${formatRupees(product.price)}</div>
+                        <div class="product-controls">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" data-id="${product.id}" data-action="decrease">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="quantity-display" id="product-quantity-${product.id}">${product.quantity}</span>
+                                <button class="quantity-btn" data-id="${product.id}" data-action="increase">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <button class="add-to-cart" data-id="${product.id}">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                productListElement.appendChild(productElement);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.closest('button').getAttribute('data-id'));
+                    const action = e.target.closest('button').getAttribute('data-action');
+                    updateProductQuantity(productId, action);
+                });
+            });
+            
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.closest('button').getAttribute('data-id'));
+                    addToCart(productId);
+                });
+            });
+        }
+
+        // Format Rupees with Indian numbering
+        function formatRupees(amount) {
+            return '₹' + amount.toLocaleString('en-IN');
+        }
+
+        // Format Rupees for display (with commas and decimals)
+        function formatRupeesDisplay(amount) {
+            return '₹ ' + amount.toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Parse rupees string to number
+        function parseRupees(rupeeString) {
+            return parseFloat(rupeeString.replace(/[₹,]/g, '').trim());
+        }
+
+        // Add product to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) return;
+            
+            product.quantity++;
+            
+            // Add to cart if not already there
+            const cartItem = cart.find(item => item.id === productId);
+            if (!cartItem) {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    category: product.category,
+                    quantity: 1,
+                    image: product.image
+                });
+            } else {
+                cartItem.quantity = product.quantity;
+            }
+            
+            // Update display
+            document.getElementById(`product-quantity-${productId}`).textContent = product.quantity;
+            
+            // Show notification
+            showNotification("Added to Cart", `${product.name} added to your cart`, "success");
+            
+            // Re-render cart and recalculate totals
+            renderCart();
+        }
+
+        // Update product quantity in cart
+        function updateProductQuantity(productId, action) {
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) return;
+            
+            if (action === 'increase') {
+                product.quantity++;
+                
+                const cartItem = cart.find(item => item.id === productId);
+                if (!cartItem) {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        category: product.category,
+                        quantity: 1,
+                        image: product.image
+                    });
+                } else {
+                    cartItem.quantity = product.quantity;
+                }
+                
+                showNotification("Quantity Updated", `Increased ${product.name} to ${product.quantity}`, "success");
+            } else if (action === 'decrease' && product.quantity > 0) {
+                product.quantity--;
+                
+                const cartItem = cart.find(item => item.id === productId);
+                if (cartItem) {
+                    cartItem.quantity = product.quantity;
+                    
+                    if (cartItem.quantity === 0) {
+                        cart = cart.filter(item => item.id !== productId);
+                        showNotification("Item Removed", `${product.name} removed from cart`, "info");
+                    } else {
+                        showNotification("Quantity Updated", `Decreased ${product.name} to ${product.quantity}`, "info");
+                    }
+                }
+            }
+            
+            document.getElementById(`product-quantity-${productId}`).textContent = product.quantity;
+            renderCart();
+        }
+
+        // Render cart with items
+        function renderCart() {
+            cartItemsElement.innerHTML = '';
+            
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartItemsElement.appendChild(emptyCartMessage);
+            } else {
+                emptyCartMessage.style.display = 'none';
+                
+                cart.forEach(item => {
+                    const cartItemElement = document.createElement('div');
+                    cartItemElement.className = 'cart-item slide-up';
+                    cartItemElement.innerHTML = `
+                        <div class="cart-item-image" style="background-image: url('${item.image}')"></div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-details">
+                                <span class="cart-item-price">${formatRupeesDisplay(item.price).substring(1)} × ${item.quantity}</span>
+                                <div class="cart-item-quantity-controls">
+                                    <button class="quantity-btn small" data-id="${item.id}" data-action="decrease">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span>${item.quantity}</span>
+                                    <button class="quantity-btn small" data-id="${item.id}" data-action="increase">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cart-item-total">${formatRupeesDisplay(item.price * item.quantity).substring(1)}</div>
+                    `;
+                    
+                    cartItemsElement.appendChild(cartItemElement);
+                });
+                
+                // Add event listeners to cart item buttons
+                cartItemsElement.querySelectorAll('.quantity-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const productId = parseInt(e.target.closest('button').getAttribute('data-id'));
+                        const action = e.target.closest('button').getAttribute('data-action');
+                        updateProductQuantity(productId, action);
+                    });
+                });
+            }
+            
+            calculateTotals();
+        }
+
+        // Calculate totals and apply discounts
+        function calculateTotals() {
+            // Calculate subtotal
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Apply discount rules
+            let totalDiscount = 0;
+            const appliedDiscounts = [];
+            const activeRules = [];
+            
+            discountRules.forEach(rule => {
+                if (rule.condition(cart)) {
+                    const discountResult = rule.calculate(cart);
+                    totalDiscount += discountResult.amount;
+                    appliedDiscounts.push({
+                        name: rule.name,
+                        amount: discountResult.amount,
+                        type: discountResult.type,
+                        value: discountResult.value
+                    });
+                    activeRules.push(rule.id);
+                }
+            });
+            
+            // Apply coupon discounts
+            const currentTime = new Date();
+            appliedCoupons.forEach(coupon => {
+                const couponData = couponCodes[coupon.code];
+                if (couponData) {
+                    const validation = couponData.validate(cart, currentTime);
+                    
+                    if (validation.valid) {
+                        const discountAmount = couponData.calculate(cart);
+                        totalDiscount += discountAmount;
+                        appliedDiscounts.push({
+                            name: couponData.name,
+                            amount: discountAmount,
+                            type: "coupon",
+                            value: coupon.code
+                        });
+                        coupon.valid = true;
+                        coupon.message = "";
+                    } else {
+                        coupon.valid = false;
+                        coupon.message = validation.message;
+                    }
+                }
+            });
+            
+            // Remove invalid coupons
+            appliedCoupons = appliedCoupons.filter(coupon => coupon.valid !== false);
+            
+            // Calculate taxable amount (subtotal - discounts)
+            const taxableAmount = Math.max(0, subtotal - totalDiscount);
+            
+            // Calculate GST (18% of taxable amount)
+            const gstAmount = taxableAmount * 0.18;
+            
+            // Calculate final total (taxable amount + GST)
+            const grandTotal = taxableAmount + gstAmount;
+            
+            // Update UI
+            updateDisplay(subtotal, totalDiscount, gstAmount, grandTotal, appliedDiscounts, activeRules);
+        }
+
+        // Update the display with totals and discounts
+        function updateDisplay(subtotal, totalDiscount, gstAmount, grandTotal, appliedDiscounts, activeRules) {
+            // Format amounts for display
+            const formattedSubtotal = formatRupeesDisplay(subtotal);
+            const formattedDiscount = formatRupeesDisplay(totalDiscount);
+            const formattedGst = formatRupeesDisplay(gstAmount);
+            const formattedTotal = formatRupeesDisplay(grandTotal);
+            
+            // Update main totals
+            subtotalElement.textContent = formattedSubtotal.substring(3); // Remove "₹ "
+            totalDiscountElement.textContent = formattedDiscount.substring(3);
+            gstAmountElement.textContent = formattedGst.substring(3);
+            totalElement.textContent = formattedTotal.substring(3);
+            
+            // Update cart summary
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountElement.textContent = totalItems;
+            summaryItemsElement.textContent = totalItems;
+            summarySubtotalElement.textContent = formattedSubtotal;
+            summarySavingsElement.textContent = formattedDiscount;
+            
+            // Update header stats
+            statItemsElement.textContent = totalItems;
+            statDiscountsElement.textContent = formattedDiscount;
+            statRulesElement.textContent = appliedDiscounts.length;
+            
+            // Update discounts list
+            discountsListElement.innerHTML = '';
+            
+            if (appliedDiscounts.length === 0) {
+                discountsListElement.innerHTML = '<p style="color: #6c757d; text-align: center;">No discounts applied yet</p>';
+            } else {
+                appliedDiscounts.forEach(discount => {
+                    const discountElement = document.createElement('div');
+                    discountElement.className = 'discount-item';
+                    discountElement.innerHTML = `
+                        <span class="discount-name">${discount.name}</span>
+                        <span class="discount-value">${formatRupeesDisplay(discount.amount).substring(1)}</span>
+                    `;
+                    discountsListElement.appendChild(discountElement);
+                });
+            }
+            
+            // Update active rules display
+            updateActiveRules(activeRules);
+        }
+
+        // Update active rules display
+        function updateActiveRules(activeRuleIds) {
+            const ruleCards = document.querySelectorAll('.rule-card');
+            ruleCards.forEach(card => {
+                const ruleId = parseInt(card.getAttribute('data-rule-id'));
+                const badge = card.querySelector('.rule-badge');
+                
+                if (activeRuleIds.includes(ruleId)) {
+                    card.classList.add('active');
+                    if (!badge) {
+                        const badgeElement = document.createElement('div');
+                        badgeElement.className = 'rule-badge';
+                        badgeElement.innerHTML = '<i class="fas fa-bolt"></i> ACTIVE NOW';
+                        card.appendChild(badgeElement);
+                    }
+                } else {
+                    card.classList.remove('active');
+                    if (badge) {
+                        badge.remove();
+                    }
+                }
+            });
+        }
+
+        // Apply coupon code
+        function applyCoupon() {
+            const code = couponCodeInput.value.trim().toUpperCase();
+            couponMessageElement.textContent = '';
+            couponMessageElement.style.color = '';
+            
+            if (!code) {
+                couponMessageElement.textContent = 'Please enter a coupon code.';
+                couponMessageElement.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (appliedCoupons.some(coupon => coupon.code === code)) {
+                couponMessageElement.textContent = 'This coupon has already been applied.';
+                couponMessageElement.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (!couponCodes[code]) {
+                couponMessageElement.textContent = 'Invalid coupon code. Try SAVE10, FLASH25, or WEEKEND30';
+                couponMessageElement.style.color = 'var(--danger)';
+                return;
+            }
+            
+            appliedCoupons.push({
+                code: code,
+                valid: true
+            });
+            
+            couponMessageElement.textContent = `Coupon "${code}" applied successfully!`;
+            couponMessageElement.style.color = 'var(--success)';
+            couponCodeInput.value = '';
+            
+            calculateTotals();
+            showNotification("Coupon Applied", `"${code}" coupon applied successfully!`, "success");
+        }
+
+        // Clear the entire cart
+        function clearCart() {
+            if (cart.length === 0) {
+                showNotification("Cart Empty", "Your cart is already empty", "info");
+                return;
+            }
+            
+            products.forEach(product => {
+                product.quantity = 0;
+            });
+            
+            cart = [];
+            appliedCoupons = [];
+            
+            renderProducts();
+            renderCart();
+            couponMessageElement.textContent = '';
+            
+            showNotification("Cart Cleared", "All items removed from cart", "info");
+        }
+
+        // Open customer details modal
+        function openCustomerModal() {
+            if (cart.length === 0) {
+                showNotification("Empty Cart", "Add items to your cart before checkout", "error");
+                return;
+            }
+            
+            customerModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Reset form
+            customerForm.reset();
+            paymentOptions.forEach(opt => opt.classList.remove('selected'));
+            paymentMethodInput.value = '';
+        }
+
+        // Close customer modal
+        function closeCustomerModal() {
+            customerModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Handle order submission
+        function handleOrderSubmit(e) {
+            e.preventDefault();
+            
+            // Validate payment method
+            if (!paymentMethodInput.value) {
+                showNotification("Payment Required", "Please select a payment method", "error");
+                return;
+            }
+            
+            // Get form data
+            const customerData = {
+                name: document.getElementById('customer-name').value,
+                email: document.getElementById('customer-email').value,
+                phone: document.getElementById('customer-phone').value,
+                address: document.getElementById('customer-address').value,
+                city: document.getElementById('customer-city').value,
+                state: document.getElementById('customer-state').value,
+                pincode: document.getElementById('customer-pincode').value,
+                paymentMethod: paymentMethodInput.value
+            };
+            
+            // Generate invoice
+            generateInvoice(customerData);
+            
+            // Close customer modal
+            closeCustomerModal();
+        }
+
+        // Generate invoice
+        function generateInvoice(customerData) {
+            // Calculate totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalDiscount = parseRupees(totalDiscountElement.textContent);
+            const taxableAmount = Math.max(0, subtotal - totalDiscount);
+            const gstAmount = taxableAmount * 0.18;
+            const grandTotal = taxableAmount + gstAmount;
+            
+            // Generate invoice number
+            invoiceCounter++;
+            const invoiceNumber = `INV-${new Date().getFullYear()}${invoiceCounter.toString().padStart(4, '0')}`;
+            
+            // Set invoice date
+            const now = new Date();
+            const invoiceDate = now.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            // Update invoice details
+            invoiceNumberElement.textContent = invoiceNumber;
+            invoiceDateElement.textContent = invoiceDate;
+            
+            // Update customer details
+            invoiceCustomerName.textContent = customerData.name;
+            invoiceCustomerEmail.textContent = customerData.email;
+            invoiceCustomerPhone.textContent = customerData.phone;
+            invoiceCustomerAddress.textContent = `${customerData.address}, ${customerData.city}, ${customerData.state} - ${customerData.pincode}`;
+            
+            // Update payment method display
+            const paymentMethods = {
+                'credit-card': 'Credit Card',
+                'debit-card': 'Debit Card',
+                'upi': 'UPI',
+                'netbanking': 'Net Banking',
+                'cod': 'Cash on Delivery'
+            };
+            paymentMethodDisplay.textContent = paymentMethods[customerData.paymentMethod];
+            
+            // Populate invoice items
+            invoiceItemsElement.innerHTML = '';
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.category}</td>
+                    <td>${formatRupeesDisplay(item.price)}</td>
+                    <td>${item.quantity}</td>
+                    <td>${formatRupeesDisplay(itemTotal)}</td>
+                `;
+                invoiceItemsElement.appendChild(row);
+            });
+            
+            // Update invoice totals with proper formatting
+            invoiceSubtotalElement.textContent = formatRupeesDisplay(subtotal);
+            invoiceDiscountElement.textContent = "-" + formatRupeesDisplay(totalDiscount);
+            invoiceGstElement.textContent = formatRupeesDisplay(gstAmount);
+            invoiceTotalElement.textContent = formatRupeesDisplay(grandTotal);
+            
+            // Show invoice modal
+            invoiceModal.style.display = 'block';
+            
+            // Show success notification
+            showNotification("Order Confirmed!", `Invoice ${invoiceNumber} generated successfully`, "success");
+        }
+
+        // Print invoice
+        function printInvoice() {
+            window.print();
+        }
+
+        // Update time in real-time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-IN', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true 
+            });
+            const dateString = now.toLocaleDateString('en-IN', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            currentTimeElement.textContent = timeString;
+            currentDateElement.textContent = dateString;
+            
+            // Recalculate discounts every minute (time-based discounts might change)
+            if (now.getSeconds() === 0 && cart.length > 0) {
+                calculateTotals();
+            }
+        }
+
+        // Render discount rules
+        function renderRules() {
+            rulesListElement.innerHTML = '';
+            
+            discountRules.forEach(rule => {
+                const ruleElement = document.createElement('div');
+                ruleElement.className = 'rule-card';
+                ruleElement.setAttribute('data-rule-id', rule.id);
+                ruleElement.innerHTML = `
+                    <div class="rule-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="rule-title">${rule.name}</div>
+                    <div class="rule-description">${rule.description}</div>
+                `;
+                rulesListElement.appendChild(ruleElement);
+            });
+        }
+
+        // Show notification
+        function showNotification(title, message, type = "info") {
+            notificationTitle.textContent = title;
+            notificationText.textContent = message;
+            notificationElement.className = `notification ${type}`;
+            
+            // Update icon
+            const icon = notificationElement.querySelector('.notification-icon i');
+            if (type === "success") {
+                icon.className = "fas fa-check-circle";
+            } else if (type === "error") {
+                icon.className = "fas fa-exclamation-circle";
+            } else if (type === "warning") {
+                icon.className = "fas fa-exclamation-triangle";
+            } else {
+                icon.className = "fas fa-info-circle";
+            }
+            
+            notificationElement.classList.add('show');
+            
+            // Hide after 4 seconds
+            setTimeout(() => {
+                notificationElement.classList.remove('show');
+            }, 4000);
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

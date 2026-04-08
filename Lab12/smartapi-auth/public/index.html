@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartAPI Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🚀 SmartAPI Pro System</h1>
+
+<div class="card">
+<h2>Register</h2>
+<input id="rname" placeholder="Name">
+<input id="remail" placeholder="Email">
+<input id="rpass" placeholder="Password">
+<button onclick="register()">Register</button>
+</div>
+
+<div class="card">
+<h2>Login</h2>
+<input id="lemail" placeholder="Email">
+<input id="lpass" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<div class="card">
+<h2>Users</h2>
+<input id="search" placeholder="Search user">
+<button onclick="loadUsers()">Load Users</button>
+<ul id="users"></ul>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

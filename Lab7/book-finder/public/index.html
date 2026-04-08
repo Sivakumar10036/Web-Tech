@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Online Book Finder</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+<h1>📚 Online Book Finder</h1>
+<p>Search, filter and explore your favorite books easily</p>
+</header>
+
+<!-- Search Section -->
+
+<section class="card">
+
+<h2>Search by Title</h2>
+
+<input type="text" id="searchTitle" placeholder="Enter book title (e.g. JavaScript)">
+
+<button onclick="searchByTitle()">Search</button>
+
+</section>
+
+<!-- Category Filter -->
+
+<section class="card">
+
+<h2>Filter by Category</h2>
+
+<select id="category">
+
+<option value="">All Categories</option>
+<option value="Programming">Programming</option>
+<option value="Fiction">Fiction</option>
+<option value="Science">Science</option>
+<option value="Self-Help">Self-Help</option>
+
+</select>
+
+<button onclick="filterByCategory()">Filter</button>
+
+</section>
+
+<!-- Sort Books -->
+
+<section class="card">
+
+<h2>Sort Books</h2>
+
+<select id="sortBy">
+
+<option value="price-asc">Price: Low to High</option>
+<option value="price-desc">Price: High to Low</option>
+<option value="rating-desc">Rating: High to Low</option>
+
+</select>
+
+<button onclick="sortBooks()">Sort</button>
+
+</section>
+
+<!-- Top Rated Books -->
+
+<section class="card">
+
+<h2>Top Rated Books</h2>
+
+<p>Click the button to view the top 5 highest rated books</p>
+
+<button onclick="showTopRated()">Show Top 5</button>
+
+</section>
+
+<!-- Results -->
+
+<section class="results">
+
+<h2>📖 Book Results</h2>
+
+<div id="results"></div>
+
+</section>
+
+<!-- Footer -->
+
+<footer class="footer">
+
+<p>© 2026 Online Book Finder | Developed by Rajavarapu Siva Kumar</p>
+
+</footer>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

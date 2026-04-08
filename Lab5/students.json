@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "R Siva Kumar",
+        "course": "CSE",
+        "marks": 65
+    },
+    {
+        "id": 2,
+        "name": "Raghu Varan",
+        "course": "CSE",
+        "marks": 85
+    },
+    {
+        "id": 3,
+        "name": "B Narasimha",
+        "course": "ECE",
+        "marks": 33
+    },
+    {
+        "id": 4,
+        "name": "T Varun Kumar",
+        "course": "EEE",
+        "marks": 78
+    },
+    {
+        "id": 5,
+        "name": "P Ravi Teja",
+        "course": "IT",
+        "marks": 88
+    }
+]

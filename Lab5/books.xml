@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+
+    <book>
+        <id>1</id>
+        <title>Introduction to Algorithms</title>
+        <author>Thomas H. Cormen</author>
+        <status>Available</status>
+    </book>
+
+    <book>
+        <id>2</id>
+        <title>Computer Networks</title>
+        <author>Andrew S. Tanenbaum</author>
+        <status>Available</status>
+    </book>
+
+    <book>
+        <id>3</id>
+        <title>Operating System Concepts</title>
+        <author>Abraham Silberschatz</author>
+        <status>Not Available</status>
+    </book>
+
+    <book>
+        <id>4</id>
+        <title>Database System Concepts</title>
+        <author>Henry F. Korth</author>
+        <status>Available</status>
+    </book>
+
+    <book>
+        <id>5</id>
+        <title>Artificial Intelligence: A Modern Approach</title>
+        <author>Stuart Russell</author>
+        <status>Available</status>
+    </book>
+
+    <book>
+        <id>6</id>
+        <title>Clean Code</title>
+        <author>Robert C. Martin</author>
+        <status>Available</status>
+    </book>
+
+    <book>
+        <id>7</id>
+        <title>Computer Organization and Architecture</title>
+        <author>William Stallings</author>
+        <status>Not Available</status>
+    </book>
+
+    <book>
+        <id>8</id>
+        <title>Cryptography and Network Security</title>
+        <author>William Stallings</author>
+        <status>Available</status>
+    </book>
+
+</library>

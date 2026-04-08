@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Book Tracker</title>
+
+    <style>
+
+        body
+        {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #141e30, #243b55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container
+        {
+            width: 95%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            color: white;
+        }
+
+        h2
+        {
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .form-container
+        {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        input
+        {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 180px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        input::placeholder
+        {
+            color: #ddd;
+        }
+
+        button
+        {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .add-btn
+        {
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+        }
+
+        .add-btn:hover
+        {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
+        }
+
+        table
+        {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 10px;
+            background: white;
+            color: black;
+        }
+
+        th
+        {
+            background: #1f2937;
+            color: white;
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        td
+        {
+            padding: 12px;
+            text-align: center;
+        }
+
+        tr:nth-child(even)
+        {
+            background: #f3f4f6;
+        }
+
+        tr:hover
+        {
+            background: #e0f2fe;
+            transition: 0.2s;
+        }
+
+        .action-btn
+        {
+            padding: 6px 10px;
+            margin: 2px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .update-btn
+        {
+            background: #22c55e;
+            color: white;
+        }
+
+        .delete-btn
+        {
+            background: #ef4444;
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>📚 Library Book Tracker</h2>
+
+    <div class="form-container">
+        <input type="text" id="bookId" placeholder="Book ID">
+        <input type="text" id="title" placeholder="Title">
+        <input type="text" id="author" placeholder="Author">
+        <button class="add-btn" onclick="addBook()">Add Book</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="bookTable"></tbody>
+    </table>
+
+</div>
+
+<script>
+
+let xmlData
+
+function loadBooks()
+{
+    fetch("books.xml")
+    .then(response => response.text())
+    .then(data =>
+    {
+        const parser = new DOMParser()
+        xmlData = parser.parseFromString(data, "application/xml")
+        displayBooks()
+    })
+}
+
+function displayBooks()
+{
+    const books = xmlData.getElementsByTagName("book")
+    let tableContent = ""
+
+    for(let i = 0; i < books.length; i++)
+    {
+        const id = books[i].getElementsByTagName("id")[0].textContent
+        const title = books[i].getElementsByTagName("title")[0].textContent
+        const author = books[i].getElementsByTagName("author")[0].textContent
+        const status = books[i].getElementsByTagName("status")[0].textContent
+
+        tableContent += `
+        <tr>
+            <td>${id}</td>
+            <td>${title}</td>
+            <td>${author}</td>
+            <td>${status}</td>
+            <td>
+                <button class="action-btn update-btn" onclick="updateStatus('${id}')">Toggle</button>
+                <button class="action-btn delete-btn" onclick="deleteBook('${id}')">Delete</button>
+            </td>
+        </tr>`
+    }
+
+    document.getElementById("bookTable").innerHTML = tableContent
+}
+
+function addBook()
+{
+    const id = document.getElementById("bookId").value.trim()
+    const title = document.getElementById("title").value.trim()
+    const author = document.getElementById("author").value.trim()
+
+    if(id === "" || title === "" || author === "")
+    {
+        alert("All fields are required")
+        return
+    }
+
+    const books = xmlData.getElementsByTagName("book")
+
+    for(let i = 0; i < books.length; i++)
+    {
+        if(books[i].getElementsByTagName("id")[0].textContent === id)
+        {
+            alert("Book ID already exists")
+            return
+        }
+    }
+
+    const newBook = xmlData.createElement("book")
+
+    const idNode = xmlData.createElement("id")
+    idNode.textContent = id
+
+    const titleNode = xmlData.createElement("title")
+    titleNode.textContent = title
+
+    const authorNode = xmlData.createElement("author")
+    authorNode.textContent = author
+
+    const statusNode = xmlData.createElement("status")
+    statusNode.textContent = "Available"
+
+    newBook.appendChild(idNode)
+    newBook.appendChild(titleNode)
+    newBook.appendChild(authorNode)
+    newBook.appendChild(statusNode)
+
+    xmlData.getElementsByTagName("library")[0].appendChild(newBook)
+
+    displayBooks()
+}
+
+function updateStatus(id)
+{
+    const books = xmlData.getElementsByTagName("book")
+
+    for(let i = 0; i < books.length; i++)
+    {
+        const bookId = books[i].getElementsByTagName("id")[0].textContent
+
+        if(bookId === id)
+        {
+            const statusNode = books[i].getElementsByTagName("status")[0]
+
+            if(statusNode.textContent === "Available")
+            {
+                statusNode.textContent = "Not Available"
+            }
+            else
+            {
+                statusNode.textContent = "Available"
+            }
+        }
+    }
+
+    displayBooks()
+}
+
+function deleteBook(id)
+{
+    const books = xmlData.getElementsByTagName("book")
+
+    for(let i = books.length - 1; i >= 0; i--)
+    {
+        if(books[i].getElementsByTagName("id")[0].textContent === id)
+        {
+            books[i].parentNode.removeChild(books[i])
+        }
+    }
+
+    displayBooks()
+}
+
+loadBooks()
+
+</script>
+
+</body>
+</html>

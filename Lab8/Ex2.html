@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES6 Student Object with User Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #007bff;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            flex: 1;
+            min-width: 150px;
+        }
+        .footer
+        {
+            text-align:center;
+
+            margin-top:25px;
+
+            font-size:13px;
+
+            color:#666;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.reset {
+            background-color: #6c757d;
+        }
+        button.reset:hover {
+            background-color: #545b62;
+        }
+        button.example {
+            background-color: #28a745;
+        }
+        button.example:hover {
+            background-color: #218838;
+        }
+        .student-card {
+            background-color: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #b8daff;
+        }
+        .student-card h3 {
+            margin-top: 0;
+            color: #004085;
+        }
+        .grade-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .grade-A { background-color: #28a745; color: white; }
+        .grade-B { background-color: #17a2b8; color: white; }
+        .grade-C { background-color: #ffc107; color: black; }
+        .grade-D { background-color: #fd7e14; color: white; }
+        .grade-F { background-color: #dc3545; color: white; }
+        .info {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .result-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .result-box {
+            background-color: #2d2d2d;
+            color: #f8f8f8;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+            overflow-x: auto;
+        }
+        .result-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .col {
+            flex: 1;
+            min-width: 250px;
+        }
+        .placeholder-text {
+            color: #999;
+            font-style: italic;
+        }
+        .grade-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .grade-table th, .grade-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .grade-table th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Student Information System</h1>
+
+        <h2>📝 Enter Student Details</h2>
+        
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="studentId">Student ID:</label>
+                    <input type="number" id="studentId" placeholder="Enter student ID">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="studentName">Student Name:</label>
+                    <input type="text" id="studentName" placeholder="Enter student name">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="studentDept">Department:</label>
+                    <select id="studentDept">
+                        <option value="" disabled selected>Select department</option>
+                        <option value="CSE">Computer Science (CSE)</option>
+                        <option value="ECE">Electronics (ECE)</option>
+                        <option value="EEE">Electrical (EEE)</option>
+                        <option value="MECH">Mechanical (MECH)</option>
+                        <option value="CIVIL">Civil (CIVIL)</option>
+                        <option value="IT">Information Technology (IT)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="studentMarks">Marks (0-100):</label>
+                    <input type="number" id="studentMarks" min="0" max="100" placeholder="Enter marks">
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button onclick="processStudent()">Process Student</button>
+            <button class="example" onclick="loadExample()">Load Example</button>
+            <button class="reset" onclick="resetForm()">Reset Form</button>
+        </div>
+
+        <div class="student-card" id="studentCard">
+            <h3>📋 Current Student Object</h3>
+            <p><strong>ID:</strong> <span id="displayId" class="placeholder-text">Not set</span></p>
+            <p><strong>Name:</strong> <span id="displayName" class="placeholder-text">Not set</span></p>
+            <p><strong>Department:</strong> <span id="displayDept" class="placeholder-text">Not set</span></p>
+            <p><strong>Marks:</strong> <span id="displayMarks" class="placeholder-text">Not set</span></p>
+            <p><strong>Grade:</strong> <span id="displayGrade" class="placeholder-text">Not calculated</span></p>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-label">📊 Updated Student Object (with grade):</div>
+            <div class="result-box" id="spreadResult"></div>
+        </div>
+    </div>
+    <div class="footer">
+
+    Designed by Rajavarapu Siva Kumar
+
+    </div>
+
+    <script>
+        // Grade calculation function
+        function calculateGrade(marks) {
+            marks = parseInt(marks);
+            if (marks >= 90 && marks <= 100) return "A";
+            if (marks >= 80 && marks <= 89) return "B";
+            if (marks >= 70 && marks <= 79) return "C";
+            if (marks >= 60 && marks <= 69) return "D";
+            if (marks >= 0 && marks < 60) return "F";
+            return "Invalid";
+        }
+
+        // Get grade class for styling
+        function getGradeClass(grade) {
+            return `grade-${grade}`;
+        }
+
+        // Update student card display
+        function updateStudentCard(student, grade) {
+            document.getElementById('displayId').textContent = student.id || 'Not set';
+            document.getElementById('displayId').className = student.id ? '' : 'placeholder-text';
+            
+            document.getElementById('displayName').textContent = student.name || 'Not set';
+            document.getElementById('displayName').className = student.name ? '' : 'placeholder-text';
+            
+            document.getElementById('displayDept').textContent = student.department || 'Not set';
+            document.getElementById('displayDept').className = student.department ? '' : 'placeholder-text';
+            
+            document.getElementById('displayMarks').textContent = student.marks || 'Not set';
+            document.getElementById('displayMarks').className = student.marks ? '' : 'placeholder-text';
+            
+            if (grade) {
+                document.getElementById('displayGrade').textContent = grade;
+                document.getElementById('displayGrade').className = `grade-display ${getGradeClass(grade)}`;
+            } else {
+                document.getElementById('displayGrade').textContent = 'Not calculated';
+                document.getElementById('displayGrade').className = 'placeholder-text';
+            }
+        }
+
+        // Get input values and create student object
+        function getStudentFromInput() {
+            return {
+                id: parseInt(document.getElementById('studentId').value) || null,
+                name: document.getElementById('studentName').value || null,
+                department: document.getElementById('studentDept').value || null,
+                marks: parseInt(document.getElementById('studentMarks').value) || null
+            };
+        }
+
+        // Validate if all fields are filled
+        function validateStudent(student) {
+            return student.id && student.name && student.department && student.marks !== null;
+        }
+
+        // Main function to process student
+        function processStudent() {
+            // Get student object from input
+            const student = getStudentFromInput();
+            
+            // Check if all fields are filled
+            if (!validateStudent(student)) {
+                alert('Please fill in all fields before processing!');
+                return;
+            }
+            
+            // Calculate grade
+            const grade = calculateGrade(student.marks);
+            
+            // Update student card
+            updateStudentCard(student, grade);
+
+            // Show result section
+            document.getElementById('resultSection').style.display = 'block';
+
+            // Use object destructuring to extract values (for console only)
+            const {id, name, department, marks} = student;
+
+            // Create a new object using the spread operator and add grade property
+            const updatedStudent = {
+                ...student,
+                grade: grade
+            };
+
+            // Display only the updated student object in the requested format
+            document.getElementById('spreadResult').innerHTML = 
+                `{ id: ${updatedStudent.id}, name: "${updatedStudent.name}", department: "${updatedStudent.department}", marks: ${updatedStudent.marks}, grade: ${grade} }`;
+
+            // Log to console (optional)
+            console.log('Updated Student Object:', updatedStudent);
+        }
+
+        // Load example data
+        function loadExample() {
+            document.getElementById('studentId').value = '101';
+            document.getElementById('studentName').value = 'Priya';
+            document.getElementById('studentDept').value = 'CSE';
+            document.getElementById('studentMarks').value = '92';
+            
+            // Auto process after loading example
+            processStudent();
+            
+            console.log('Example data loaded successfully!');
+        }
+
+        // Reset form to empty
+        function resetForm() {
+            document.getElementById('studentId').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentDept').value = '';
+            document.getElementById('studentMarks').value = '';
+            
+            // Reset displays
+            document.getElementById('displayId').textContent = 'Not set';
+            document.getElementById('displayId').className = 'placeholder-text';
+            document.getElementById('displayName').textContent = 'Not set';
+            document.getElementById('displayName').className = 'placeholder-text';
+            document.getElementById('displayDept').textContent = 'Not set';
+            document.getElementById('displayDept').className = 'placeholder-text';
+            document.getElementById('displayMarks').textContent = 'Not set';
+            document.getElementById('displayMarks').className = 'placeholder-text';
+            document.getElementById('displayGrade').textContent = 'Not calculated';
+            document.getElementById('displayGrade').className = 'placeholder-text';
+            
+            // Hide result section
+            document.getElementById('resultSection').style.display = 'none';
+            
+            console.log('Form has been reset');
+        }
+
+        // Initialize with empty form on page load
+        window.onload = function() {
+            resetForm();
+        };
+
+        // Add input validation for marks
+        document.getElementById('studentMarks').addEventListener('input', function(e) {
+            let value = parseInt(e.target.value);
+            if (value > 100) e.target.value = 100;
+            if (value < 0) e.target.value = 0;
+        });
+
+        // Add keyboard support (Enter key to process)
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processStudent();
+            }
+        });
+    </script>
+</body>
+</html>

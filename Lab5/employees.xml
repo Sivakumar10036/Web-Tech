@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<employees>
+
+    <employee>
+        <id>101</id>
+        <name>R Siva Kumar</name>
+        <department>Web Development</department>
+        <salary>30000</salary>
+    </employee>
+
+    <employee>
+        <id>102</id>
+        <name>R Srikanth</name>
+        <department>AI/ML Engineer</department>
+        <salary>50000</salary>
+    </employee>
+
+</employees>

@@ -1,0 +1,130 @@
+body
+{
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.app
+{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.card
+{
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.heading
+{
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.form input
+{
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: none;
+}
+
+.password-box
+{
+    position: relative;
+}
+
+.eye
+{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.strength
+{
+    height: 5px;
+    border-radius: 5px;
+    margin: 5px 0;
+    background: red;
+}
+
+.strength.medium
+{
+    background: orange;
+}
+
+.strength.strong
+{
+    background: green;
+}
+
+button
+{
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.error
+{
+    color: red;
+    font-size: 12px;
+    min-height: 14px;
+    display: block;
+}
+
+.welcome
+{
+    text-align: center;
+    color: white;
+}
+button
+{
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+button:hover
+{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Click Effect */
+button:active
+{
+    transform: scale(0.97);
+}
+
+/* Disabled State */
+button:disabled
+{
+    background: gray;
+    cursor: not-allowed;
+    box-shadow: none;
+}

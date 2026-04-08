@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Card</title>
+
+<style>
+
+body
+{
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #e3eef3, #f7f9fb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* ================= CARD ================= */
+
+.product-card
+{
+    width: 360px;
+    background-color: #ffffff;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.12),
+        0 25px 60px rgba(0,0,0,0.18);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover
+{
+    transform: translateY(-8px);
+    box-shadow:
+        0 18px 35px rgba(0,0,0,0.18),
+        0 35px 80px rgba(0,0,0,0.25);
+}
+
+/* ================= SLIDER ================= */
+
+.slider
+{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    background-color: #f2f2f2;
+}
+
+.slides
+{
+    display: flex;
+    transition: transform 0.6s ease;
+}
+
+.slides img
+{
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Arrows */
+
+.prev, .next
+{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.prev:hover, .next:hover
+{
+    background: black;
+    transform: translateY(-50%) scale(1.15);
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* ================= TEXT ================= */
+
+.product-card h2
+{
+    font-size: 1.45em;
+    margin: 10px 0;
+    color: #222;
+}
+
+.product-card p
+{
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.price
+{
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #e53935;
+    margin-bottom: 18px;
+}
+
+/* ================= BUTTONS ================= */
+
+.button-container
+{
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.buy-btn,
+.details-btn
+{
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.buy-btn
+{
+    background: linear-gradient(135deg, #43a047, #66bb6a);
+}
+
+.details-btn
+{
+    background: linear-gradient(135deg, #1e88e5, #42a5f5);
+}
+
+.buy-btn:hover,
+.details-btn:hover
+{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* ================= DETAILS POPUP ================= */
+
+.details-popup
+{
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: #1f1f1f;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    text-align: left;
+    z-index: 10;
+}
+
+.details-popup::after
+{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-top-color: #1f1f1f;
+}
+
+.details-btn:hover .details-popup
+{
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.details-popup h3
+{
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #4caf50;
+}
+
+.details-popup ul
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.details-popup li
+{
+    font-size: 0.9em;
+    padding: 6px 0;
+    border-bottom: 1px solid #444;
+}
+
+.details-popup li:last-child
+{
+    border-bottom: none;
+}
+
+.details-popup strong
+{
+    color: #4caf50;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="product-card">
+
+    <div class="slider">
+        <div class="slides" id="slides">
+            <img src="Images/Oneplus1.png">
+            <img src="Images/Oneplus2.png">
+            <img src="Images/Oneplus3.png">
+        </div>
+
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+    <h2>OnePlus 13R</h2>
+    <p>Flagship Snapdragon 8 Gen 3, 6.78-inch AMOLED display, 6000mAh battery, triple camera setup.</p>
+    <div class="price">₹42,999</div>
+
+    <div class="button-container">
+        <button class="details-btn">
+            Details
+            <div class="details-popup">
+                <h3>Full Specifications</h3>
+                <ul>
+                    <li><strong>Processor:</strong> Snapdragon 8 Gen 3</li>
+                    <li><strong>Display:</strong> 6.78" AMOLED, 120Hz</li>
+                    <li><strong>RAM:</strong> 12GB LPDDR5X</li>
+                    <li><strong>Storage:</strong> 256GB UFS 4.0</li>
+                    <li><strong>Battery:</strong> 6000mAh, 100W</li>
+                    <li><strong>Camera:</strong> 50MP + 8MP + 2MP</li>
+                    <li><strong>OS:</strong> OxygenOS 14</li>
+                    <li><strong>5G:</strong> Dual SIM</li>
+                </ul>
+            </div>
+        </button>
+
+        <button class="buy-btn">Buy Now</button>
+    </div>
+
+</div>
+
+<script>
+let currentIndex = 0;
+const slides = document.getElementById("slides");
+const totalSlides = slides.children.length;
+
+function moveSlide(direction)
+{
+    currentIndex = (currentIndex + direction + totalSlides) % totalSlides;
+    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+}
+</script>
+
+</body>
+</html>

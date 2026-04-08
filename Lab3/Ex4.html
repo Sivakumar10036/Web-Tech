@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced User Activity Monitor</title>
+
+<style>
+body
+{
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    color: #e5e7eb;
+    padding: 20px;
+}
+
+.container
+{
+    max-width: 1200px;
+    margin: auto;
+    background: rgba(15,23,42,0.8);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+h1
+{
+    text-align: center;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.dashboard
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card
+{
+    background: rgba(2,6,23,0.9);
+    padding: 15px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: inset 0 0 20px rgba(59,130,246,0.15);
+}
+
+.card span
+{
+    display: block;
+    font-size: 26px;
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+.status
+{
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    display: none;
+}
+
+.status.warning
+{
+    background: rgba(234,179,8,0.2);
+    color: #facc15;
+}
+
+.status.critical
+{
+    background: rgba(239,68,68,0.2);
+    color: #f87171;
+}
+
+.controls
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+button
+{
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    color: white;
+}
+
+button.secondary
+{
+    background: linear-gradient(135deg, #7c2d12, #dc2626);
+}
+
+button.pause
+{
+    background: linear-gradient(135deg, #4b5563, #9ca3af);
+}
+
+.log
+{
+    max-height: 420px;
+    overflow-y: auto;
+    background: rgba(2,6,23,0.95);
+    border-radius: 14px;
+    padding: 15px;
+    font-size: 14px;
+}
+
+.entry
+{
+    padding: 6px 0;
+    border-bottom: 1px solid #1e293b;
+}
+
+.entry.warning
+{
+    color: #facc15;
+}
+
+.entry.critical
+{
+    color: #f87171;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🛡️ Real-Time User Activity Monitor</h1>
+
+<div class="dashboard">
+    <div class="card">Clicks<span id="clickCount">0</span></div>
+    <div class="card">Keys<span id="keyCount">0</span></div>
+    <div class="card">Focus<span id="focusCount">0</span></div>
+    <div class="card">Mouse Moves<span id="mouseCount">0</span></div>
+</div>
+
+<div id="statusBox" class="status"></div>
+
+<div class="controls">
+    <button onclick="toggleMonitoring()" class="pause" id="pauseBtn">Pause</button>
+    <button onclick="exportTXT()">Export TXT</button>
+    <button onclick="exportJSON()">Export JSON</button>
+    <button onclick="resetAll()" class="secondary">Reset</button>
+</div>
+
+<div class="log" id="log"></div>
+
+</div>
+
+<script>
+let active = true;
+
+let activityLog = [];
+let clickCount = 0;
+let keyCount = 0;
+let focusCount = 0;
+let mouseCount = 0;
+
+let clickTimes = [];
+let keyTimes = [];
+let mouseTimes = [];
+
+const logDiv = document.getElementById("log");
+const statusBox = document.getElementById("statusBox");
+
+function timeNow()
+{
+    return new Date().toLocaleTimeString();
+}
+
+function addEntry(type, detail, phase, level="normal")
+{
+    const entry =
+    {
+        type, detail, phase, level, time: timeNow()
+    };
+
+    activityLog.push(entry);
+
+    logDiv.innerHTML =
+    `<div class="entry ${level}">
+        [${entry.time}] ${type} → ${detail} (${phase})
+     </div>` + logDiv.innerHTML;
+}
+
+function checkBurst(list, limit, windowMs)
+{
+    const now = Date.now();
+    return list.filter(t => now - t < windowMs).length > limit;
+}
+
+function setStatus(level, text)
+{
+    statusBox.className = "status " + level;
+    statusBox.innerText = text;
+    statusBox.style.display = "block";
+}
+
+/* 🖱 Click */
+document.addEventListener("click", e =>
+{
+    if(!active) return;
+
+    clickCount++;
+    document.getElementById("clickCount").innerText = clickCount;
+    clickTimes.push(Date.now());
+
+    let level = "normal";
+    if(checkBurst(clickTimes, 15, 5000))
+    {
+        level = "warning";
+        setStatus("warning", "⚠ High Click Activity Detected");
+    }
+
+    addEntry("Click", e.target.tagName, "Bubble", level);
+}, false);
+
+document.addEventListener("click", e =>
+{
+    if(!active) return;
+    addEntry("Click", e.target.tagName, "Capture");
+}, true);
+
+/* ⌨ Key */
+document.addEventListener("keydown", e =>
+{
+    if(!active) return;
+
+    keyCount++;
+    document.getElementById("keyCount").innerText = keyCount;
+    keyTimes.push(Date.now());
+
+    let level = "normal";
+    if(checkBurst(keyTimes, 30, 5000))
+    {
+        level = "critical";
+        setStatus("critical", "🚨 Keyboard Spamming Detected");
+    }
+
+    addEntry("Key", e.key, "Bubble", level);
+});
+
+/* 🔍 Focus */
+document.addEventListener("focusin", e =>
+{
+    if(!active) return;
+    focusCount++;
+    document.getElementById("focusCount").innerText = focusCount;
+    addEntry("Focus In", e.target.tagName, "Bubble");
+});
+
+document.addEventListener("focusout", e =>
+{
+    if(!active) return;
+    focusCount++;
+    document.getElementById("focusCount").innerText = focusCount;
+    addEntry("Focus Out", e.target.tagName, "Bubble");
+});
+
+/* 🐭 Mouse Move */
+document.addEventListener("mousemove", () =>
+{
+    if(!active) return;
+
+    mouseCount++;
+    document.getElementById("mouseCount").innerText = mouseCount;
+    mouseTimes.push(Date.now());
+
+    if(checkBurst(mouseTimes, 20, 3000))
+    {
+        setStatus("warning", "⚠ Rapid Mouse Movement Detected");
+    }
+});
+
+/* ⏸ Pause / Resume */
+function toggleMonitoring()
+{
+    active = !active;
+    pauseBtn.innerText = active ? "Pause" : "Resume";
+}
+
+/* 🔄 Reset */
+function resetAll()
+{
+    activityLog = [];
+    clickCount = keyCount = focusCount = mouseCount = 0;
+    clickTimes = keyTimes = mouseTimes = [];
+    logDiv.innerHTML = "";
+    statusBox.style.display = "none";
+    document.getElementById("clickCount").innerText = 0;
+    document.getElementById("keyCount").innerText = 0;
+    document.getElementById("focusCount").innerText = 0;
+    document.getElementById("mouseCount").innerText = 0;
+}
+
+/* 📤 Export */
+function exportTXT()
+{
+    let text = "USER ACTIVITY LOG\n\n";
+    activityLog.forEach(a =>
+    {
+        text += `[${a.time}] ${a.type} - ${a.detail} (${a.phase}) [${a.level}]\n`;
+    });
+    download(text, "activity_log.txt");
+}
+
+function exportJSON()
+{
+    download(JSON.stringify(activityLog, null, 2), "activity_log.json");
+}
+
+function download(data, name)
+{
+    const blob = new Blob([data], {type:"text/plain"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>

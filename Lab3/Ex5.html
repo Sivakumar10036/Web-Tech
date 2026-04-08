@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Step Gradient Form</title>
+
+<style>
+:root
+{
+    --bg1: linear-gradient(135deg, #1e3c72, #2a5298);
+    --bg2: linear-gradient(135deg, #11998e, #38ef7d);
+    --bg3: linear-gradient(135deg, #ff512f, #dd2476);
+    --bg4: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+body
+{
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: var(--bg1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background 0.8s ease;
+}
+
+body.dark
+{
+    filter: brightness(0.9);
+}
+
+.container
+{
+    width: 720px;
+    background: white;
+    border-radius: 22px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    overflow: hidden;
+}
+
+.header
+{
+    padding: 25px;
+    background: rgba(0,0,0,0.1);
+    color: #111;
+    text-align: center;
+    position: relative;
+}
+
+.toggle
+{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    border: none;
+    background: #111;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.stepper
+{
+    display: flex;
+    justify-content: space-between;
+    padding: 18px;
+    background: #f8fafc;
+}
+
+.step
+{
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+    color: gray;
+}
+
+.step.active
+{
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.progress-bar
+{
+    height: 8px;
+    background: #e5e7eb;
+}
+
+.progress
+{
+    height: 100%;
+    width: 25%;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    transition: 0.4s;
+}
+
+.content
+{
+    padding: 30px;
+}
+
+.stage
+{
+    display: none;
+}
+
+.stage.active
+{
+    display: block;
+    animation: fade 0.5s ease;
+}
+
+@keyframes fade
+{
+    from {opacity:0; transform:translateY(15px);}
+    to {opacity:1; transform:translateY(0);}
+}
+
+label
+{
+    display: block;
+    margin-top: 14px;
+    font-weight: bold;
+}
+
+input, select
+{
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 10px;
+    border: 1px solid #cbd5f5;
+}
+
+.error
+{
+    font-size: 13px;
+    color: red;
+}
+
+.strength
+{
+    height: 6px;
+    margin-top: 6px;
+    border-radius: 6px;
+    background: #e5e7eb;
+}
+
+.strength div
+{
+    height: 100%;
+    width: 0%;
+    transition: 0.3s;
+}
+
+.buttons
+{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+button
+{
+    padding: 12px 22px;
+    border: none;
+    border-radius: 14px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.secondary
+{
+    background: gray;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <h2>✨ Smart Multi-Stage Form</h2>
+    <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+</div>
+
+<div class="stepper">
+    <div class="step active">Personal</div>
+    <div class="step">Account</div>
+    <div class="step">Preferences</div>
+    <div class="step">Review</div>
+</div>
+
+<div class="progress-bar">
+    <div class="progress" id="progress"></div>
+</div>
+
+<div class="content">
+
+<div class="stage active">
+    <label>Full Name</label>
+    <input id="name">
+    <div class="error" id="nameError"></div>
+
+    <label>Age</label>
+    <input type="number" id="age">
+    <div class="error" id="ageError"></div>
+</div>
+
+<div class="stage">
+    <label>Email</label>
+    <input id="email">
+    <div class="error" id="emailError"></div>
+
+    <label>Password</label>
+    <input type="password" id="password" oninput="checkStrength()">
+    <div class="strength"><div id="strengthBar"></div></div>
+    <div class="error" id="passwordError"></div>
+</div>
+
+<div class="stage">
+    <label>Role</label>
+    <select id="role">
+        <option value="">Select</option>
+        <option>Student</option>
+        <option>Developer</option>
+        <option>Admin</option>
+    </select>
+    <div class="error" id="roleError"></div>
+</div>
+
+<div class="stage">
+    <h3>Review</h3>
+    <div id="review"></div>
+</div>
+
+<div class="buttons">
+    <button class="secondary" onclick="prev()">Back</button>
+    <button onclick="next()" id="nextBtn">Next</button>
+</div>
+
+</div>
+</div>
+
+<script>
+let stage = 0;
+
+const gradients =
+[
+    "var(--bg1)",
+    "var(--bg2)",
+    "var(--bg3)",
+    "var(--bg4)"
+];
+
+const stages = document.querySelectorAll(".stage");
+const steps = document.querySelectorAll(".step");
+const progress = document.getElementById("progress");
+const nextBtn = document.getElementById("nextBtn");
+
+const nameInput = document.getElementById("name");
+const ageInput = document.getElementById("age");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const roleSelect = document.getElementById("role");
+const strengthBar = document.getElementById("strengthBar");
+const review = document.getElementById("review");
+
+function updateBackground()
+{
+    document.body.style.background = gradients[stage];
+}
+
+function showStage()
+{
+    stages.forEach(s => s.classList.remove("active"));
+    steps.forEach(s => s.classList.remove("active"));
+
+    stages[stage].classList.add("active");
+    steps[stage].classList.add("active");
+
+    progress.style.width = (stage + 1) * 25 + "%";
+    nextBtn.innerText = stage === 3 ? "Submit" : "Next";
+
+    updateBackground();
+}
+
+function next()
+{
+    if(stage < 3)
+    {
+        stage++;
+        if(stage === 3) showReview();
+        showStage();
+    }
+    else
+    {
+        alert("🎉 Submitted Successfully!");
+        resetForm();
+    }
+}
+
+function prev()
+{
+    if(stage > 0)
+    {
+        stage--;
+        showStage();
+    }
+}
+
+function checkStrength()
+{
+    let v = passwordInput.value;
+    let score = 0;
+    if(/[a-z]/.test(v)) score++;
+    if(/[A-Z]/.test(v)) score++;
+    if(/\d/.test(v)) score++;
+    if(/[@$!%*?&#]/.test(v)) score++;
+    if(v.length >= 8) score++;
+
+    strengthBar.style.width = score * 20 + "%";
+    strengthBar.style.background =
+        score < 3 ? "red" : score < 5 ? "orange" : "green";
+}
+
+function showReview()
+{
+    review.innerHTML = `
+        <p><b>Name:</b> ${nameInput.value}</p>
+        <p><b>Age:</b> ${ageInput.value}</p>
+        <p><b>Email:</b> ${emailInput.value}</p>
+        <p><b>Role:</b> ${roleSelect.value}</p>
+    `;
+}
+
+function resetForm()
+{
+    stage = 0;
+    document.querySelectorAll("input").forEach(i => i.value = "");
+    roleSelect.value = "";
+    strengthBar.style.width = "0%";
+    showStage();
+}
+
+function toggleTheme()
+{
+    document.body.classList.toggle("dark");
+}
+
+updateBackground();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Auth</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+<div class="card" id="loginBox">
+<h2>Login</h2>
+<input id="username">
+<input id="password" type="password">
+<button onclick="login()">Login</button>
+<button class="secondary" onclick="showRegister()">Register</button>
+</div>
+
+<div class="card" id="registerBox" style="display:none;">
+<h2>Register</h2>
+<input id="regUser">
+<input id="regPass" type="password">
+<button onclick="register()">Register</button>
+<button class="secondary" onclick="showLogin()">Login</button>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

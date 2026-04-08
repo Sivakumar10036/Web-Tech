@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Geometry</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;700;900&display=swap');
+
+        :root {
+            --accent-neon: #00f2fe;
+            --accent-gold: #fbbf24;
+            --accent-purple: #9d50bb;
+            --accent-pink: #d946ef;
+            --accent-blue: #3b82f6;
+            --bg-dark: #0f172a;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #0a0a0c);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            background: linear-gradient(to right, #00d2ff, #9d50bb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-top: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin: 0 0 20px 0;
+            color: var(--accent-neon);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-neon), transparent);
+            margin: 10px auto 0;
+            border-radius: 3px;
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 850px) {
+            .canvas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h4 {
+            margin: 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-neon);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            color: #64748b;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        canvas {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            width: 100%;
+            height: 160px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-label {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 30px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Ultimate Canvas Geometry<h1>
+    </div>
+
+    <div class="main-container">
+        <div>
+            <h2 class="section-title">Basic Geometry</h2>
+            <div class="canvas-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Quad Geometry</h4>
+                        <span class="card-tag">Rectangles</span>
+                    </div>
+                    <canvas id="quadCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Filled Rectangle & Square with solid colors</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Polygonal Math</h4>
+                        <span class="card-tag">Polygons</span>
+                    </div>
+                    <canvas id="polyCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Triangle, Hexagon & Octagon using trigonometric calculations</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="section-title">Curves & Effects</h2>
+            <div class="canvas-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Curvature & Glow</h4>
+                        <span class="card-tag">Neon Effects</span>
+                    </div>
+                    <canvas id="circleCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Glowing circle and 3D sphere with radial gradients</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Solar Flare</h4>
+                        <span class="card-tag">Radial Gradient</span>
+                    </div>
+                    <canvas id="flareCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Sun-like radial glow with soft shadow effects</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="section-title">Paths & Typography</h2>
+            <div class="canvas-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Typography & Paths</h4>
+                        <span class="card-tag">Text & Lines</span>
+                    </div>
+                    <canvas id="textLineCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Holographic text with gradient and dashed lines</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Neon Vector</h4>
+                        <span class="card-tag">Dashed Path</span>
+                    </div>
+                    <canvas id="vectorCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Glowing dashed path with shadow blur effects</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="section-title">Gradients & Advanced</h2>
+            <div class="canvas-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Typography Gradient</h4>
+                        <span class="card-tag">Linear Gradient</span>
+                    </div>
+                    <canvas id="textGradientCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">HTML5 text with linear color gradient effect</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Velocity Gradient</h4>
+                        <span class="card-tag">Linear Fill</span>
+                    </div>
+                    <canvas id="linearGradientCanvas" width="400" height="150"></canvas>
+                    <div class="card-label">Rounded rectangle with linear gradient fill</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>HTML5 Canvas Geometry Showcase | Merged from two canvas collections</p>
+        <p>Featuring geometric shapes, neon effects, gradients, and typography</p>
+    </div>
+
+    <script>
+        // Helper function for drawing regular polygons
+        function drawShape(ctx, x, y, radius, sides, color, glow = false) {
+            if (glow) {
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 10;
+            }
+            
+            ctx.beginPath();
+            const angle = (Math.PI * 2) / sides;
+            for (let i = 0; i < sides; i++) {
+                const xPos = x + radius * Math.cos(angle * i - Math.PI / 2);
+                const yPos = y + radius * Math.sin(angle * i - Math.PI / 2);
+                if (i === 0) ctx.moveTo(xPos, yPos);
+                else ctx.lineTo(xPos, yPos);
+            }
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            
+            if (glow) {
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        window.onload = function() {
+            // --- 1. Quad Canvas ---
+            const qCtx = document.getElementById("quadCanvas").getContext("2d");
+            // Rectangle
+            qCtx.fillStyle = "#1e40af";
+            qCtx.fillRect(50, 40, 120, 70);
+            // Square
+            qCtx.fillStyle = "#10b981";
+            qCtx.fillRect(230, 35, 80, 80);
+
+            // --- 2. Poly Canvas ---
+            const pCtx = document.getElementById("polyCanvas").getContext("2d");
+            // Triangle
+            drawShape(pCtx, 80, 85, 50, 3, "#d946ef");
+            // Hexagon
+            drawShape(pCtx, 200, 85, 50, 6, "#ef4444");
+            // Octagon
+            drawShape(pCtx, 320, 85, 50, 8, "#6366f1");
+
+            // --- 3. Circle Canvas ---
+            const cCtx = document.getElementById("circleCanvas").getContext("2d");
+            // Glowing Circle
+            cCtx.shadowBlur = 15;
+            cCtx.shadowColor = "#00d2ff";
+            cCtx.strokeStyle = "#00d2ff";
+            cCtx.lineWidth = 4;
+            cCtx.beginPath();
+            cCtx.arc(100, 75, 45, 0, Math.PI * 2);
+            cCtx.stroke();
+            // Glass Sphere
+            cCtx.shadowBlur = 25;
+            const grad = cCtx.createRadialGradient(285, 60, 5, 300, 75, 50);
+            grad.addColorStop(0, "#fff");
+            grad.addColorStop(1, "#3b82f6");
+            cCtx.fillStyle = grad;
+            cCtx.beginPath();
+            cCtx.arc(300, 75, 50, 0, Math.PI * 2);
+            cCtx.fill();
+            cCtx.shadowBlur = 0;
+
+            // --- 4. Solar Flare Canvas ---
+            const fCtx = document.getElementById("flareCanvas").getContext("2d");
+            const rg = fCtx.createRadialGradient(200, 75, 0, 200, 75, 60);
+            rg.addColorStop(0, "#fbbf24");
+            rg.addColorStop(0.7, "#f59e0b");
+            rg.addColorStop(1, "#d97706");
+            fCtx.shadowColor = "rgba(251, 191, 36, 0.5)";
+            fCtx.shadowBlur = 25;
+            fCtx.fillStyle = rg;
+            fCtx.beginPath();
+            fCtx.arc(200, 75, 45, 0, Math.PI * 2);
+            fCtx.fill();
+            fCtx.shadowBlur = 0;
+
+            // --- 5. Text & Lines Canvas ---
+            const tlCtx = document.getElementById("textLineCanvas").getContext("2d");
+            // Line
+            tlCtx.strokeStyle = "#fbbf24";
+            tlCtx.setLineDash([10, 5]);
+            tlCtx.lineWidth = 4;
+            tlCtx.beginPath();
+            tlCtx.moveTo(40, 40);
+            tlCtx.lineTo(360, 40);
+            tlCtx.stroke();
+            // Text
+            tlCtx.setLineDash([]); // reset
+            tlCtx.textAlign = "center";
+            tlCtx.font = "900 40px Outfit";
+            const textGrad = tlCtx.createLinearGradient(0, 80, 0, 130);
+            textGrad.addColorStop(0, "#fff");
+            textGrad.addColorStop(1, "#475569");
+            tlCtx.fillStyle = textGrad;
+            tlCtx.fillText("Siva Kumar", 200, 110);
+
+            // --- 6. Neon Vector Canvas ---
+            const vCtx = document.getElementById("vectorCanvas").getContext("2d");
+            vCtx.shadowColor = "#00f2fe";
+            vCtx.shadowBlur = 15;
+            vCtx.strokeStyle = "#00f2fe";
+            vCtx.lineWidth = 6;
+            vCtx.lineCap = "round";
+            vCtx.setLineDash([15, 10]);
+            vCtx.beginPath();
+            vCtx.moveTo(40, 40);
+            vCtx.lineTo(280, 100);
+            vCtx.lineTo(360, 60);
+            vCtx.stroke();
+            vCtx.shadowBlur = 0;
+            vCtx.setLineDash([]);
+
+            // --- 7. Text Gradient Canvas ---
+            const tgCtx = document.getElementById("textGradientCanvas").getContext("2d");
+            tgCtx.textAlign = "center";
+            tgCtx.textBaseline = "middle";
+            tgCtx.font = "900 42px Inter";
+            const tg = tgCtx.createLinearGradient(0, 40, 0, 100);
+            tg.addColorStop(0, "#ffffff");
+            tg.addColorStop(1, "#4facfe");
+            tgCtx.fillStyle = tg;
+            tgCtx.fillText("Rajavarapu", 200, 70);
+            
+            // Add a subtle glow to the text
+            tgCtx.shadowColor = "#4facfe";
+            tgCtx.shadowBlur = 20;
+            tgCtx.fillText("Rajavarapu", 200, 70);
+            tgCtx.shadowBlur = 0;
+
+            // --- 8. Linear Gradient Canvas ---
+            const lgCtx = document.getElementById("linearGradientCanvas").getContext("2d");
+            const lg = lgCtx.createLinearGradient(0, 0, 400, 0);
+            lg.addColorStop(0, "#4facfe");
+            lg.addColorStop(1, "#00f2fe");
+            lgCtx.fillStyle = lg;
+            
+            // Create rounded rectangle manually
+            lgCtx.beginPath();
+            lgCtx.moveTo(60, 50);
+            lgCtx.lineTo(340, 50);
+            lgCtx.quadraticCurveTo(360, 50, 360, 70);
+            lgCtx.lineTo(360, 110);
+            lgCtx.quadraticCurveTo(360, 130, 340, 130);
+            lgCtx.lineTo(60, 130);
+            lgCtx.quadraticCurveTo(40, 130, 40, 110);
+            lgCtx.lineTo(40, 70);
+            lgCtx.quadraticCurveTo(40, 50, 60, 50);
+            lgCtx.closePath();
+            lgCtx.fill();
+            
+            // Add text on top of the gradient
+            lgCtx.fillStyle = "white";
+            lgCtx.font = "bold 24px Inter";
+            lgCtx.textAlign = "center";
+            lgCtx.textBaseline = "middle";
+            lgCtx.fillText("Linear Gradient", 200, 90);
+        };
+    </script>
+</body>
+</html>

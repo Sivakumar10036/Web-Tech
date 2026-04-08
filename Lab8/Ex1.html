@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Marks Calculator</title>
+
+<style>
+
+*
+{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body
+{
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+
+    padding:40px 20px;
+
+    background:linear-gradient(120deg,#2193b0,#6dd5ed,#5f2c82,#49a09d);
+    background-size:300% 300%;
+
+    animation:bgMove 12s ease infinite;
+}
+
+@keyframes bgMove
+{
+    0%
+    {
+        background-position:0% 50%;
+    }
+
+    50%
+    {
+        background-position:100% 50%;
+    }
+
+    100%
+    {
+        background-position:0% 50%;
+    }
+}
+
+.container
+{
+    width:100%;
+    max-width:550px;
+
+    padding:40px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,0.95);
+
+    backdrop-filter:blur(8px);
+
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+
+    animation:fadeUp 0.8s ease;
+}
+
+@keyframes fadeUp
+{
+    from
+    {
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to
+    {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+h1
+{
+    text-align:center;
+    margin-bottom:30px;
+    color:#333;
+    letter-spacing:1px;
+}
+
+.form-group
+{
+    margin-bottom:18px;
+}
+
+label
+{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+    color:#444;
+}
+
+input
+{
+    width:100%;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:1px solid #ddd;
+
+    font-size:15px;
+
+    transition:all 0.25s ease;
+}
+
+input:focus
+{
+    border-color:#5f2c82;
+
+    box-shadow:0 0 0 2px rgba(95,44,130,0.15);
+
+    outline:none;
+}
+
+.subject
+{
+    margin-bottom:15px;
+}
+
+.add-btn
+{
+    width:45px;
+    height:45px;
+
+    border:none;
+
+    border-radius:50%;
+
+    font-size:24px;
+
+    background:linear-gradient(135deg,#667eea,#764ba2);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:all 0.25s ease;
+
+    margin-bottom:10px;
+}
+
+.add-btn:hover
+{
+    transform:scale(1.1);
+
+    box-shadow:0 6px 20px rgba(0,0,0,0.25);
+}
+
+button.calculate
+{
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:all 0.25s ease;
+}
+
+button.calculate:hover
+{
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+.result
+{
+    display:none;
+
+    margin-top:25px;
+
+    padding:18px;
+
+    border-radius:10px;
+
+    background:#f5f7fa;
+
+    font-size:17px;
+
+    line-height:1.8;
+
+    border-left:5px solid #0072ff;
+}
+
+.footer
+{
+    text-align:center;
+
+    margin-top:25px;
+
+    font-size:13px;
+
+    color:#666;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+<h1>Student Marks Calculator</h1>
+
+
+
+<div class="form-group">
+
+<label>Student Name</label>
+
+<input type="text" id="studentName" placeholder="Enter student name">
+
+</div>
+
+
+
+<div id="subjects">
+
+<div class="form-group subject">
+
+<label>Subject 1 Marks</label>
+
+<input type="number" class="mark">
+
+</div>
+
+
+
+<div class="form-group subject">
+
+<label>Subject 2 Marks</label>
+
+<input type="number" class="mark">
+
+</div>
+
+
+
+<div class="form-group subject">
+
+<label>Subject 3 Marks</label>
+
+<input type="number" class="mark">
+
+</div>
+
+</div>
+
+
+
+<button class="add-btn" onclick="addSubject()">+</button>
+
+
+
+<button class="calculate" onclick="calculateResult()">Calculate Result</button>
+
+
+
+<div id="result" class="result"></div>
+
+
+
+<div class="footer">
+
+Designed by Rajavarapu Siva Kumar
+
+</div>
+
+
+
+</div>
+
+
+
+<script>
+
+
+
+const addSubject = () =>
+{
+    const subjects = document.getElementById("subjects");
+
+    const subjectCount = subjects.children.length + 1;
+
+    const subjectDiv = document.createElement("div");
+
+    subjectDiv.className = "form-group subject";
+
+    subjectDiv.innerHTML =
+    `
+        <label>Subject ${subjectCount} Marks</label>
+        <input type="number" class="mark">
+    `;
+
+    subjects.appendChild(subjectDiv);
+};
+
+
+
+const calculateResult = () =>
+{
+    const studentName = document.getElementById("studentName").value;
+
+    const marks = document.querySelectorAll(".mark");
+
+    let total = 0;
+
+    marks.forEach(mark =>
+    {
+        total += Number(mark.value);
+    });
+
+    const average = total / marks.length;
+
+    const resultBox = document.getElementById("result");
+
+    resultBox.style.display = "block";
+
+    resultBox.innerHTML =
+    `
+    Student Name: <b>${studentName}</b> <br>
+    Total Marks: <b>${total}</b> <br>
+    Average Marks: <b>${average.toFixed(2)}</b>
+    `;
+};
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

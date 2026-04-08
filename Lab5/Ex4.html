@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Inventory Pro | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #64748b;
+            --success-bg: #dcfce7; --success-text: #166534; /* Green: > 15 */
+            --warning-bg: #fef9c3; --warning-text: #854d0e; /* Yellow: 10-15 */
+            --danger-bg: #fee2e2; --danger-text: #991b1b;  /* Red: < 10 */
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text-main);
+        }
+
+        .container { max-width: 1200px; margin: auto; }
+
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 2rem; color: white; 
+        }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem; margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg); padding: 1.5rem; border-radius: 16px;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 { font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); }
+        .stat-card p { font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; color: var(--primary); }
+
+        main {
+            background: var(--glass-bg); border-radius: 24px; padding: 2rem;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .input-group { 
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; 
+            gap: 0.75rem; width: 100%; margin-bottom: 20px;
+        }
+
+        input {
+            padding: 0.75rem 1rem; border: 1px solid var(--border);
+            border-radius: 12px; outline: none; transition: 0.2s;
+        }
+
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+        .btn {
+            padding: 0.75rem 1.25rem; border: none; border-radius: 12px;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--secondary); }
+
+        /* Table & Badges */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 1rem; color: var(--secondary); font-size: 0.85rem; border-bottom: 2px solid var(--border); }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); }
+
+        .badge { padding: 0.4rem 0.8rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; }
+        .badge-success { background: var(--success-bg); color: var(--success-text); }
+        .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
+
+        .action-btns { display: flex; gap: 0.5rem; }
+        .icon-btn { 
+            background: white; border: 1px solid var(--border); width: 35px; height: 35px;
+            border-radius: 8px; cursor: pointer; font-size: 1rem;
+        }
+
+        .search-container { width: 100%; position: relative; margin-bottom: 1.5rem; }
+        .search-container input { width: 100%; padding-left: 2.5rem; background: #f8fafc; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Nexus <span style="font-weight: 300;">Inventory</span></h1>
+            <p style="font-size: 0.85rem; opacity: 0.9;">System is active and fetching from inventory.json</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+            <button class="btn btn-outline" onclick="resetData()" style="color: var(--danger)">Reset to Original</button>
+        </div>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Value</h3>
+            <p id="statValue">$0.00</p>
+        </div>
+        <div class="stat-card">
+            <h3>Unique Items</h3>
+            <p id="statCount">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Refill Alerts</h3>
+            <p id="statAlerts">0</p>
+        </div>
+    </div>
+
+    <main>
+        <div class="search-container">
+            <span style="position: absolute; left: 1rem; top: 0.8rem;">🔍</span>
+            <input type="text" id="searchInput" placeholder="Filter by category..." onkeyup="handleSearch()">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="pName" placeholder="Product Name">
+            <input type="text" id="pCat" placeholder="Category">
+            <input type="number" id="pPrice" placeholder="Price">
+            <input type="number" id="pStock" placeholder="Stock Qty">
+            <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>PRODUCT</th>
+                        <th>CATEGORY</th>
+                        <th>PRICE</th>
+                        <th>STOCK STATUS</th>
+                        <th>TOTAL</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryBody"></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+    let inventory = [];
+
+    // Initialize: Load from LocalStorage or Fetch from JSON
+    async function init(force = false) {
+        const cached = localStorage.getItem('nexus_v3');
+        if (cached && !force) {
+            inventory = JSON.parse(cached);
+            updateUI();
+        } else {
+            try {
+                const res = await fetch('inventory.json');
+                if (!res.ok) throw new Error();
+                inventory = await res.json();
+                updateUI();
+            } catch (e) {
+                console.log("No JSON found or server offline. Starting empty.");
+                inventory = [];
+                updateUI();
+            }
+        }
+    }
+
+    function updateUI(data = inventory) {
+        renderTable(data);
+        renderStats();
+        localStorage.setItem('nexus_v3', JSON.stringify(inventory));
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('inventoryBody');
+        tbody.innerHTML = "";
+
+        data.forEach(item => {
+            let statusClass = "badge-success";
+            let statusText = "Stable";
+
+            // The Logic: Red < 10, Yellow 10-15, Green > 15
+            if (item.stock < 10) {
+                statusClass = "badge-danger";
+                statusText = "Low Stock";
+            } else if (item.stock >= 10 && item.stock <= 15) {
+                statusClass = "badge-warning";
+                statusText = "Refill Soon";
+            }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="font-weight:600">${item.name}</td>
+                <td><span style="color:var(--secondary)">${item.category}</span></td>
+                <td>$${parseFloat(item.price).toFixed(2)}</td>
+                <td><span class="badge ${statusClass}">${item.stock} - ${statusText}</span></td>
+                <td style="font-weight:600">$${(item.price * item.stock).toFixed(2)}</td>
+                <td class="action-btns">
+                    <button class="icon-btn" onclick="editProduct(${item.id})">✏️</button>
+                    <button class="icon-btn" onclick="deleteProduct(${item.id})" style="color:var(--danger)">🗑️</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderStats() {
+        const total = inventory.reduce((s, i) => s + (i.price * i.stock), 0);
+        const alerts = inventory.filter(i => i.stock <= 15).length;
+        
+        document.getElementById('statValue').innerText = `$${total.toLocaleString()}`;
+        document.getElementById('statCount').innerText = inventory.length;
+        document.getElementById('statAlerts').innerText = alerts;
+    }
+
+    function addProduct() {
+        const n = document.getElementById('pName').value;
+        const c = document.getElementById('pCat').value;
+        const p = parseFloat(document.getElementById('pPrice').value);
+        const s = parseInt(document.getElementById('pStock').value);
+
+        if (!n || isNaN(p) || isNaN(s)) return alert("Please fill all fields.");
+
+        inventory.push({ id: Date.now(), name: n, category: c, price: p, stock: s });
+        updateUI();
+        ['pName', 'pCat', 'pPrice', 'pStock'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    function editProduct(id) {
+        const item = inventory.find(i => i.id === id);
+        const p = prompt("New Price:", item.price);
+        const s = prompt("New Stock:", item.stock);
+        if (p !== null) item.price = parseFloat(p);
+        if (s !== null) item.stock = parseInt(s);
+        updateUI();
+    }
+
+    function deleteProduct(id) {
+        if(confirm("Remove item?")) {
+            inventory = inventory.filter(i => i.id !== id);
+            updateUI();
+        }
+    }
+
+    function handleSearch() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = inventory.filter(i => i.category.toLowerCase().includes(q));
+        renderTable(filtered);
+    }
+
+    function resetData() {
+        if(confirm("Reload from inventory.json? Current changes will be lost.")) init(true);
+    }
+
+    function exportCSV() {
+        let csv = "Product,Category,Price,Stock\n";
+        inventory.forEach(i => csv += `${i.name},${i.category},${i.price},${i.stock}\n`);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'inventory.csv'; a.click();
+    }
+
+    init();
+</script>
+</body>
+</html>

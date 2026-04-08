@@ -1,0 +1,269 @@
+body
+{
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #2b5876, #4e4376);
+}
+
+/* MAIN APP */
+.app
+{
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+/* HEADER */
+.header
+{
+    margin-bottom: 20px;
+}
+
+.header h1
+{
+    margin: 0;
+    font-size: 32px;
+}
+
+/* FORM ALIGNMENT */
+.form
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* INPUTS */
+.form input,
+.form select
+{
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+/* TEXT INPUT */
+.form input[type="text"]
+{
+    width: 200px;
+}
+
+/* DATE INPUT */
+.form input[type="date"]
+{
+    width: 150px;
+}
+
+/* BUTTON */
+.form button
+{
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #ff7b00;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form button:hover
+{
+    background: #ff9500;
+    transform: scale(1.05);
+}
+
+/* PROGRESS BAR */
+.progress-bar
+{
+    width: 60%;
+    height: 12px;
+    margin: 25px auto;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar div
+{
+    height: 100%;
+    background: limegreen;
+    transition: 0.4s;
+}
+
+/* STATS TEXT */
+.stats
+{
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+/* LIST CONTAINER */
+.list
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ITEM CARD */
+.item
+{
+    width: 380px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    margin: 12px 0;
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.item:hover
+{
+    transform: translateY(-5px);
+}
+
+/* COMPLETED TASK */
+.item.done
+{
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+/* TEXT SIDE */
+.item h3
+{
+    margin: 0;
+}
+
+.item p
+{
+    margin: 5px 0;
+    font-size: 13px;
+}
+
+/* PRIORITY BADGES */
+.badge
+{
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.badge.high
+{
+    background: red;
+}
+
+.badge.medium
+{
+    background: orange;
+}
+
+.badge.low
+{
+    background: green;
+}
+
+/* BUTTONS */
+.item button
+{
+    margin-left: 5px;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* COMPLETE BUTTON */
+.item button:first-child
+{
+    background: #00c853;
+    color: white;
+}
+
+/* DELETE BUTTON */
+.item button:last-child
+{
+    background: #d50000;
+    color: white;
+}
+
+/* TOAST */
+.toast
+{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: black;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ANIMATION */
+@keyframes fadeIn
+{
+    from
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* DARK MODE MAIN */
+.app.dark
+{
+    background: #121212;
+    color: #ffffff;
+}
+
+/* DARK MODE HEADER */
+.app.dark .header
+{
+    background: #1e1e1e;
+}
+
+/* DARK MODE FORM */
+.app.dark .form input,
+.app.dark .form select
+{
+    background: #2c2c2c;
+    color: white;
+}
+
+/* DARK MODE CARD */
+.app.dark .item
+{
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+
+/* DARK MODE BUTTONS */
+.app.dark button
+{
+    opacity: 0.9;
+}
+
+/* DARK MODE PROGRESS */
+.app.dark .progress-bar
+{
+    background: rgba(255,255,255,0.1);
+}

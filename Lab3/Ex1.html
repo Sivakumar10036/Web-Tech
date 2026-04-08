@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Registration System</title>
+
+<style>
+body
+{
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    font-family: Arial, sans-serif;
+}
+
+.container
+{
+    background: white;
+    width: 460px;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+}
+
+h2
+{
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.panda
+{
+    text-align: center;
+    font-size: 60px;
+    margin-bottom: 5px;
+}
+
+label
+{
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+input, select, textarea
+{
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.password-box
+{
+    position: relative;
+}
+
+.eye
+{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.error
+{
+    font-size: 12px;
+    color: red;
+}
+
+.valid
+{
+    border: 2px solid green;
+}
+
+.invalid
+{
+    border: 2px solid red;
+}
+
+#skillsBox
+{
+    display: none;
+}
+
+button
+{
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:disabled
+{
+    background: gray;
+    cursor: not-allowed;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="panda" id="panda">🙈</div>
+    <h2>Registration</h2>
+
+    <form id="form">
+
+        <label>Name</label>
+        <input type="text" id="name" placeholder="Enter your name">
+
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Enter your email">
+        <span class="error" id="emailError"></span>
+
+        <label>Password</label>
+        <div class="password-box">
+            <input type="password" id="password" placeholder="Enter password">
+            <span class="eye" onclick="togglePassword('password')">👁️</span>
+        </div>
+        <span class="error" id="passwordError"></span>
+
+        <label>Confirm Password</label>
+        <div class="password-box">
+            <input type="password" id="confirmPassword" placeholder="Confirm password">
+            <span class="eye" onclick="togglePassword('confirmPassword')">👁️</span>
+        </div>
+        <span class="error" id="confirmError"></span>
+
+        <label>Age</label>
+        <input type="number" id="age" placeholder="Enter your age">
+
+        <label>Role</label>
+        <select id="role">
+            <option value="">Select Role</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <div id="skillsBox">
+            <label>Skills</label>
+            <textarea rows="3" placeholder="Enter your skills"></textarea>
+        </div>
+
+        <button id="submitBtn" disabled>Register</button>
+
+    </form>
+</div>
+
+<script>
+const form = document.getElementById("form");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const confirmPassword = document.getElementById("confirmPassword");
+const role = document.getElementById("role");
+const submitBtn = document.getElementById("submitBtn");
+const panda = document.getElementById("panda");
+const skillsBox = document.getElementById("skillsBox");
+
+let visibleCount = 0;
+
+function togglePassword(id)
+{
+    let field = document.getElementById(id);
+    field.type = field.type === "password" ? "text" : "password";
+    visibleCount += field.type === "text" ? 1 : -1;
+    panda.innerText = visibleCount > 0 ? "🐼" : "🙈";
+}
+
+function validateEmail()
+{
+    let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if(pattern.test(email.value))
+    {
+        email.className = "valid";
+        emailError.innerText = "";
+        return true;
+    }
+    email.className = "invalid";
+    emailError.innerText = "Enter a valid email";
+    return false;
+}
+
+function validatePassword()
+{
+    let pattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+    if(pattern.test(password.value))
+    {
+        password.className = "valid";
+        passwordError.innerText = "";
+        return true;
+    }
+    password.className = "invalid";
+    passwordError.innerText =
+    "Min 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 symbol";
+    return false;
+}
+
+function validateConfirmPassword()
+{
+    if(confirmPassword.value !== "" &&
+       password.value === confirmPassword.value)
+    {
+        confirmPassword.className = "valid";
+        confirmError.innerText = "";
+        return true;
+    }
+    confirmPassword.className = "invalid";
+    confirmError.innerText = "Passwords do not match";
+    return false;
+}
+
+role.addEventListener("change", () =>
+{
+    skillsBox.style.display =
+    (role.value === "teacher" || role.value === "admin") ? "block" : "none";
+    checkForm();
+});
+
+function checkForm()
+{
+    submitBtn.disabled =
+    !(validateEmail() && validatePassword() && validateConfirmPassword());
+}
+
+email.addEventListener("input", checkForm);
+password.addEventListener("input", checkForm);
+confirmPassword.addEventListener("input", checkForm);
+
+form.addEventListener("submit", e =>
+{
+    e.preventDefault();
+    alert("Registration Successful 🎉");
+
+    form.reset();
+    submitBtn.disabled = true;
+    skillsBox.style.display = "none";
+    panda.innerText = "🙈";
+    visibleCount = 0;
+
+    document.querySelectorAll("input, textarea").forEach(el =>
+    {
+        el.className = "";
+    });
+
+    emailError.innerText = "";
+    passwordError.innerText = "";
+    confirmError.innerText = "";
+});
+</script>
+
+</body>
+</html>

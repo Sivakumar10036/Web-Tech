@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="nav">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/contact">Contact</a>
+</div>
+
+<div class="container">
+<div class="card">
+
+<h1>Contact</h1>
+
+<form method="GET" action="/contact">
+<input type="text" name="name" placeholder="Enter name">
+<button type="submit">Submit</button>
+</form>
+
+<p>Hello {{name}}</p>
+
+</div>
+</div>
+
+</body>
+</html>

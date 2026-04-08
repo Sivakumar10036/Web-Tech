@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-soft: #eef2ff;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            
+            /* Professional Grade Colors */
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg);
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 { font-size: 24px; font-weight: 700; margin: 0; }
+        .page-header p { color: var(--text-muted); margin: 4px 0 0 0; }
+
+        /* Form Styling */
+        .form-card {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .input-box { display: flex; flex-direction: column; }
+        .input-box label { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); }
+
+        input {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-row { display: flex; gap: 12px; }
+
+        button {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-add { background: var(--primary); color: white; }
+        .btn-update { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); }
+
+        /* Table Styling */
+        .table-card {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #fcfcfd;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td { padding: 16px 20px; font-size: 14px; border-bottom: 1px solid var(--border); }
+
+        /* Components */
+        .id-label { font-family: monospace; font-weight: 700; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; color: #475569; }
+
+        .marks-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .grade-high { background: var(--success-bg); color: var(--success); }
+        .grade-mid  { background: var(--warning-bg); color: var(--warning); }
+        .grade-low  { background: var(--danger-bg);  color: var(--danger); }
+
+        .row-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            margin-left: 4px;
+        }
+
+        .row-actions button:hover { color: var(--primary); border-color: var(--primary); }
+
+        #msg { margin-top: 15px; font-size: 13px; font-weight: 500; height: 18px; }
+        .error { color: var(--danger); }
+        .success { color: var(--success); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1>Student Records</h1>
+            <p>Database synchronization active</p>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <div class="grid-inputs">
+            <div class="input-box">
+                <label>System ID</label>
+                <input type="number" id="studentId" placeholder="e.g. 5001">
+            </div>
+            <div class="input-box">
+                <label>Student Name</label>
+                <input type="text" id="studentName" placeholder="Full Name">
+            </div>
+            <div class="input-box">
+                <label>Course</label>
+                <input type="text" id="studentCourse" placeholder="Subject">
+            </div>
+            <div class="input-box">
+                <label>Marks (%)</label>
+                <input type="number" id="studentMarks" placeholder="0-100">
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="btn-add" onclick="addStudent()">Add Student</button>
+            <button class="btn-update" onclick="updateStudent()">Update Info</button>
+        </div>
+        <div id="msg"></div>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Grade</th>
+                    <th style="text-align: right;">Options</th>
+                </tr>
+            </thead>
+            <tbody id="studentTable"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let students = [];
+
+    // --- FETCH DATA FROM JSON ---
+    async function loadStudents() {
+        try {
+            const response = await fetch("students.json");
+            if (!response.ok) throw new Error("Could not find students.json");
+            
+            const data = await response.json();
+            students = data;
+            displayStudents();
+            showMsg("Data loaded from storage", "success");
+        } catch (error) {
+            showMsg("JSON Load Error: " + error.message, "error");
+            // Optional: Initialize with empty or default data if fetch fails
+            console.warn("Fetch failed. Running with local array.");
+        }
+    }
+
+    function displayStudents() {
+        let table = document.getElementById("studentTable");
+        table.innerHTML = "";
+
+        students.forEach(s => {
+            let gradeClass = "grade-high";
+            if(s.marks < 40) gradeClass = "grade-low";
+            else if(s.marks < 75) gradeClass = "grade-mid";
+
+            table.innerHTML += `
+            <tr>
+                <td><span class="id-label">${s.id}</span></td>
+                <td style="font-weight: 600;">${s.name}</td>
+                <td>${s.course}</td>
+                <td><span class="marks-badge ${gradeClass}">${s.marks}%</span></td>
+                <td class="row-actions" style="text-align: right;">
+                    <button onclick="editStudent(${s.id})">Edit</button>
+                    <button onclick="deleteStudent(${s.id})">Delete</button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    // --- LOGIC FUNCTIONS ---
+    function addStudent() {
+        let id = document.getElementById("studentId").value;
+        let name = document.getElementById("studentName").value;
+        let course = document.getElementById("studentCourse").value;
+        let marks = document.getElementById("studentMarks").value;
+
+        if(!id || !name || !course || marks === "") return showMsg("All fields are required", "error");
+
+        students.push({ id: Number(id), name, course, marks: Number(marks) });
+        displayStudents();
+        showMsg("Student added successfully", "success");
+        clearInputs();
+    }
+
+    function deleteStudent(id) {
+        students = students.filter(s => s.id !== id);
+        displayStudents();
+        showMsg("Record removed", "success");
+    }
+
+    function editStudent(id) {
+        let s = students.find(s => s.id === id);
+        if(!s) return;
+        document.getElementById("studentId").value = s.id;
+        document.getElementById("studentName").value = s.name;
+        document.getElementById("studentCourse").value = s.course;
+        document.getElementById("studentMarks").value = s.marks;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateStudent() {
+        let id = Number(document.getElementById("studentId").value);
+        let name = document.getElementById("studentName").value;
+        let course = document.getElementById("studentCourse").value;
+        let marks = Number(document.getElementById("studentMarks").value);
+
+        students = students.map(s => s.id === id ? {id, name, course, marks} : s);
+        displayStudents();
+        showMsg("Record updated", "success");
+        clearInputs();
+    }
+
+    function showMsg(txt, type) {
+        let m = document.getElementById("msg");
+        m.innerText = txt;
+        m.className = type;
+        setTimeout(() => m.innerText = "", 4000);
+    }
+
+    function clearInputs() {
+        document.querySelectorAll('input').forEach(i => i.value = "");
+    }
+
+    // RUN ON LOAD
+    loadStudents();
+
+</script>
+
+</body>
+</html>

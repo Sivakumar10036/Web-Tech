@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+<div class="card">
+
+<h2>User Dashboard</h2>
+
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="age" placeholder="Age">
+
+<button onclick="createUser()">Add User</button>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Age</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="output"></tbody>
+</table>
+
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+<div class="modal-content">
+<h3>Edit User</h3>
+<input id="editName">
+<input id="editEmail">
+<input id="editAge">
+<button onclick="updateUser()">Update</button>
+<button onclick="closeModal()">Cancel</button>
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

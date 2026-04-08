@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            z-index: 10;
+            border-bottom: 1px solid #222;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, #fff 0%, #00f2fe 50%, #fff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #888;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            flex: 1;
+            height: calc(100vh - 154px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .projects a {
+            position: relative;
+            text-decoration: none;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1a1a1a;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #000;
+        }
+
+        /* Animated gradient background */
+        .projects a .card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 400% 400%;
+            transition: all 0.6s ease;
+            filter: brightness(0.3);
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .projects a:hover .card-bg {
+            transform: scale(1.15) rotate(2deg);
+            filter: brightness(0.5);
+            animation-play-state: paused;
+        }
+
+        /* Overlay effects */
+        .projects a::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 1;
+            transition: all 0.5s ease;
+        }
+
+        .projects a:hover::after {
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.5) 100%);
+        }
+
+        .projects a .card-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 30px;
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .projects a:hover .card-content {
+            transform: translateY(-15px);
+        }
+
+        .projects a .card-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            display: block;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 0 30px rgba(0,0,0,0.8);
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+            animation: float-icon 3s ease-in-out infinite;
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .projects a:hover .card-icon {
+            transform: scale(1.3) rotate(5deg);
+            animation-play-state: paused;
+        }
+
+        .projects a .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        .projects a:hover .card-title {
+            letter-spacing: 4px;
+            opacity: 1;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        /* Glowing border effect */
+        .projects a .glow-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid transparent;
+            transition: all 0.5s ease;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Individual card styles with animated gradients */
+        .projects a:nth-child(1) .card-bg {
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #667eea);
+        }
+        .projects a:nth-child(1):hover .glow-border {
+            border-color: #667eea;
+            box-shadow: inset 0 0 60px rgba(102, 126, 234, 0.4), 0 0 40px rgba(102, 126, 234, 0.6);
+        }
+        .projects a:nth-child(1) .card-title {
+            color: #b8a9ff;
+        }
+
+        .projects a:nth-child(2) .card-bg {
+            background: linear-gradient(45deg, #f093fb, #f5576c, #ff8ba7, #f093fb);
+        }
+        .projects a:nth-child(2):hover .glow-border {
+            border-color: #f5576c;
+            box-shadow: inset 0 0 60px rgba(245, 87, 108, 0.4), 0 0 40px rgba(245, 87, 108, 0.6);
+        }
+        .projects a:nth-child(2) .card-title {
+            color: #ffb3c6;
+        }
+
+        .projects a:nth-child(3) .card-bg {
+            background: linear-gradient(45deg, #4facfe, #00f2fe, #43e0ff, #4facfe);
+        }
+        .projects a:nth-child(3):hover .glow-border {
+            border-color: #00f2fe;
+            box-shadow: inset 0 0 60px rgba(0, 242, 254, 0.4), 0 0 40px rgba(0, 242, 254, 0.6);
+        }
+        .projects a:nth-child(3) .card-title {
+            color: #8ef6ff;
+        }
+
+        .projects a:nth-child(4) .card-bg {
+            background: linear-gradient(45deg, #43e97b, #38f9d7, #5affdb, #43e97b);
+        }
+        .projects a:nth-child(4):hover .glow-border {
+            border-color: #38f9d7;
+            box-shadow: inset 0 0 60px rgba(56, 249, 215, 0.4), 0 0 40px rgba(56, 249, 215, 0.6);
+        }
+        .projects a:nth-child(4) .card-title {
+            color: #a0ffe8;
+        }
+
+        .projects a:nth-child(5) .card-bg {
+            background: linear-gradient(45deg, #fa709a, #fee140, #ffd77a, #fa709a);
+        }
+        .projects a:nth-child(5):hover .glow-border {
+            border-color: #fee140;
+            box-shadow: inset 0 0 60px rgba(254, 225, 64, 0.4), 0 0 40px rgba(254, 225, 64, 0.6);
+        }
+        .projects a:nth-child(5) .card-title {
+            color: #ffe9a0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .projects {
+                grid-template-columns: repeat(2, 1fr);
+                height: auto;
+                min-height: calc(100vh - 154px);
+            }
+
+            .projects a {
+                min-height: 350px;
+            }
+
+            .projects a:nth-child(5) {
+                grid-column: span 2;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+            .projects a {
+                min-height: 280px;
+            }
+
+            .projects a:nth-child(5) {
+                grid-column: span 1;
+            }
+
+            .projects a .card-icon {
+                font-size: 3.5rem;
+            }
+
+            .projects a .card-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated particles background -->
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <h1>Lab - 1</h1>
+    </header>
+
+    <div class="projects">
+        <a href="Exercise1.html">
+            <div class="card-bg"></div>
+            <div class="glow-border"></div>
+            <div class="card-content">
+                <span class="card-icon">📊</span>
+                <div class="card-title">Student Marksheet</div>
+            </div>
+        </a>
+
+        <a href="Exercise2.html">
+            <div class="card-bg"></div>
+            <div class="glow-border"></div>
+            <div class="card-content">
+                <span class="card-icon">📧</span>
+                <div class="card-title">Contact Form</div>
+            </div>
+        </a>
+
+        <a href="Exercise3.html">
+            <div class="card-bg"></div>
+            <div class="glow-border"></div>
+            <div class="card-content">
+                <span class="card-icon">📝</span>
+                <div class="card-title">Registration</div>
+            </div>
+        </a>
+
+        <a href="Exercise4.html">
+            <div class="card-bg"></div>
+            <div class="glow-border"></div>
+            <div class="card-content">
+                <span class="card-icon">🛍️</span>
+                <div class="card-title">Product Card</div>
+            </div>
+        </a>
+
+        <a href="Exercise5.html">
+            <div class="card-bg"></div>
+            <div class="glow-border"></div>
+            <div class="card-content">
+                <span class="card-icon">💼</span>
+                <div class="card-title">Personal Portfolio</div>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        // Create animated particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+
+</body>
+</html>
